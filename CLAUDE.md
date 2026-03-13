@@ -65,7 +65,7 @@ Okta requires `https` redirect URIs. Run the backend with a self-signed certific
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj "/CN=localhost"
 
 # Run uvicorn with SSL
-uvicorn app:app --ssl-keyfile key.pem --ssl-certfile cert.pem --port 8000
+uvicorn app:app --ssl-keyfile key.pem --ssl-certfile cert.pem --port 8000 --reload
 ```
 
 ### Same-origin advantage
