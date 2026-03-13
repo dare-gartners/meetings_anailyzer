@@ -1,0 +1,739 @@
+2026-03-12 16:25:34.606 [debug] Initializing ConfigManager from environment variables
+2026-03-12 16:25:34.609 [debug] Loaded config from environment (sensitive data redacted):
+2026-03-12 16:25:34.609 [debug] {
+  "host": "wiki.corp.adobe.com",
+  "authMethod": "[REDACTED]",
+  "port": 1984,
+  "assetsOutputDir": "./cursor-wiki-mcp/assets",
+  "assets": {
+    "extractAssets": false,
+    "outputDir": "./cursor-wiki-mcp/assets",
+    "filenamePrefix": "asset-",
+    "createOutputDirs": true,
+    "useAbsolutePath": true,
+    "assetTypes": [
+      "image",
+      "pdf",
+      "document",
+      "attachment",
+      "plantuml"
+    ]
+  }
+}
+2026-03-12 16:25:34.609 [debug] ConfigManager initialized
+2026-03-12 16:25:34.859 [info] Initializing MCP Server...
+2026-03-12 16:25:34.859 [info] 📦 Build ID: unknown
+2026-03-12 16:25:34.859 [info] 📦 Version: unknown
+2026-03-12 16:25:34.859 [info] 📦 Build Date: unknown
+2026-03-12 16:25:34.859 [info] 📦 Timestamp: 1773325534858
+2026-03-12 16:25:34.860 [debug] Creating Confluence client
+2026-03-12 16:25:34.860 [debug] - Host: wiki.corp.adobe.com
+2026-03-12 16:25:34.860 [debug] Normalized host: wiki.corp.adobe.com
+2026-03-12 16:25:34.860 [debug] Client config host with protocol: https://wiki.corp.adobe.com
+2026-03-12 16:25:34.860 [debug] ApiPrefix: /rest
+2026-03-12 16:25:34.860 [info] Using Personal Access Token authentication method
+2026-03-12 16:25:34.861 [info] Confluence client created successfully for host: wiki.corp.adobe.com
+2026-03-12 16:25:34.861 [info] Registered expert-wiki-editor prompt
+2026-03-12 16:25:34.861 [info] Registered plantuml_diagram_creator prompt
+2026-03-12 16:25:34.861 [info] Registered prompts: expert_wiki_editor, plantuml_diagram_creator
+2026-03-12 16:25:34.861 [info] Prompt "expert_wiki_editor" registered: has description=true, has callback=true
+2026-03-12 16:25:34.861 [info] Prompt "plantuml_diagram_creator" registered: has description=true, has callback=true
+2026-03-12 16:25:34.861 [info] MCP Server initialized successfully
+2026-03-12 16:25:34.863 [info] Wiki MCP Server connected via stdio
+2026-03-12 16:25:34.863 [info] Wiki MCP Server started successfully with stdio transport
+2026-03-12 16:25:38.412 [info] Transport closed
+2026-03-12 16:25:38.412 [info] MCP server closed
+2026-03-12 16:32:43.803 [debug] Initializing ConfigManager from environment variables
+2026-03-12 16:32:43.804 [debug] Loaded config from environment (sensitive data redacted):
+2026-03-12 16:32:43.804 [debug] {
+  "host": "wiki.corp.adobe.com",
+  "authMethod": "[REDACTED]",
+  "port": 1984,
+  "assetsOutputDir": "./cursor-wiki-mcp/assets",
+  "assets": {
+    "extractAssets": false,
+    "outputDir": "./cursor-wiki-mcp/assets",
+    "filenamePrefix": "asset-",
+    "createOutputDirs": true,
+    "useAbsolutePath": true,
+    "assetTypes": [
+      "image",
+      "pdf",
+      "document",
+      "attachment",
+      "plantuml"
+    ]
+  }
+}
+2026-03-12 16:32:43.804 [debug] ConfigManager initialized
+2026-03-12 16:32:44.044 [info] Initializing MCP Server...
+2026-03-12 16:32:44.044 [info] 📦 Build ID: unknown
+2026-03-12 16:32:44.044 [info] 📦 Version: unknown
+2026-03-12 16:32:44.044 [info] 📦 Build Date: unknown
+2026-03-12 16:32:44.044 [info] 📦 Timestamp: 1773325964043
+2026-03-12 16:32:44.045 [debug] Creating Confluence client
+2026-03-12 16:32:44.045 [debug] - Host: wiki.corp.adobe.com
+2026-03-12 16:32:44.045 [debug] Normalized host: wiki.corp.adobe.com
+2026-03-12 16:32:44.045 [debug] Client config host with protocol: https://wiki.corp.adobe.com
+2026-03-12 16:32:44.045 [debug] ApiPrefix: /rest
+2026-03-12 16:32:44.045 [info] Using Personal Access Token authentication method
+2026-03-12 16:32:44.045 [info] Confluence client created successfully for host: wiki.corp.adobe.com
+2026-03-12 16:32:44.045 [info] Registered expert-wiki-editor prompt
+2026-03-12 16:32:44.045 [info] Registered plantuml_diagram_creator prompt
+2026-03-12 16:32:44.045 [info] Registered prompts: expert_wiki_editor, plantuml_diagram_creator
+2026-03-12 16:32:44.045 [info] Prompt "expert_wiki_editor" registered: has description=true, has callback=true
+2026-03-12 16:32:44.046 [info] Prompt "plantuml_diagram_creator" registered: has description=true, has callback=true
+2026-03-12 16:32:44.046 [info] MCP Server initialized successfully
+2026-03-12 16:32:44.047 [info] Wiki MCP Server connected via stdio
+2026-03-12 16:32:44.047 [info] Wiki MCP Server started successfully with stdio transport
+2026-03-12 16:34:49.909 [debug] Initializing ConfigManager from environment variables
+2026-03-12 16:34:49.910 [debug] Loaded config from environment (sensitive data redacted):
+2026-03-12 16:34:49.910 [debug] {
+  "host": "wiki.corp.adobe.com",
+  "authMethod": "[REDACTED]",
+  "port": 1984,
+  "assetsOutputDir": "./cursor-wiki-mcp/assets",
+  "assets": {
+    "extractAssets": false,
+    "outputDir": "./cursor-wiki-mcp/assets",
+    "filenamePrefix": "asset-",
+    "createOutputDirs": true,
+    "useAbsolutePath": true,
+    "assetTypes": [
+      "image",
+      "pdf",
+      "document",
+      "attachment",
+      "plantuml"
+    ]
+  }
+}
+2026-03-12 16:34:49.910 [debug] ConfigManager initialized
+2026-03-12 16:34:50.105 [info] Initializing MCP Server...
+2026-03-12 16:34:50.105 [info] 📦 Build ID: unknown
+2026-03-12 16:34:50.105 [info] 📦 Version: unknown
+2026-03-12 16:34:50.105 [info] 📦 Build Date: unknown
+2026-03-12 16:34:50.105 [info] 📦 Timestamp: 1773326090104
+2026-03-12 16:34:50.106 [debug] Creating Confluence client
+2026-03-12 16:34:50.106 [debug] - Host: wiki.corp.adobe.com
+2026-03-12 16:34:50.106 [debug] Normalized host: wiki.corp.adobe.com
+2026-03-12 16:34:50.106 [debug] Client config host with protocol: https://wiki.corp.adobe.com
+2026-03-12 16:34:50.106 [debug] ApiPrefix: /rest
+2026-03-12 16:34:50.106 [error] PAT authentication selected but no token provided
+2026-03-12 16:34:50.106 [error] Failed to initialize Confluence client: Personal Access Token is required when using PAT authentication
+2026-03-12 16:34:50.106 [error] ConfluenceError: Personal Access Token is required when using PAT authentication
+    at createConfluenceClient (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/client.js:79:23)
+    at initializeConfluenceClient (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/client.js:135:28)
+    at initializeMcpServer (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/server/mcp-server.js:435:45)
+    at Object.<anonymous> (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/index.js:45:38)
+    at Module._compile (node:internal/modules/cjs/loader:1811:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1942:10)
+    at Module.load (node:internal/modules/cjs/loader:1532:32)
+    at Module._load (node:internal/modules/cjs/loader:1334:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+2026-03-12 16:35:19.539 [debug] Initializing ConfigManager from environment variables
+2026-03-12 16:35:19.540 [debug] Loaded config from environment (sensitive data redacted):
+2026-03-12 16:35:19.540 [debug] {
+  "host": "wiki.corp.adobe.com",
+  "authMethod": "[REDACTED]",
+  "port": 1984,
+  "assetsOutputDir": "./cursor-wiki-mcp/assets",
+  "assets": {
+    "extractAssets": false,
+    "outputDir": "./cursor-wiki-mcp/assets",
+    "filenamePrefix": "asset-",
+    "createOutputDirs": true,
+    "useAbsolutePath": true,
+    "assetTypes": [
+      "image",
+      "pdf",
+      "document",
+      "attachment",
+      "plantuml"
+    ]
+  }
+}
+2026-03-12 16:35:19.541 [debug] ConfigManager initialized
+2026-03-12 16:35:19.736 [info] Initializing MCP Server...
+2026-03-12 16:35:19.736 [info] 📦 Build ID: unknown
+2026-03-12 16:35:19.736 [info] 📦 Version: unknown
+2026-03-12 16:35:19.736 [info] 📦 Build Date: unknown
+2026-03-12 16:35:19.736 [info] 📦 Timestamp: 1773326119735
+2026-03-12 16:35:19.737 [debug] Creating Confluence client
+2026-03-12 16:35:19.737 [debug] - Host: wiki.corp.adobe.com
+2026-03-12 16:35:19.737 [debug] Normalized host: wiki.corp.adobe.com
+2026-03-12 16:35:19.737 [debug] Client config host with protocol: https://wiki.corp.adobe.com
+2026-03-12 16:35:19.737 [debug] ApiPrefix: /rest
+2026-03-12 16:35:19.737 [error] PAT authentication selected but no token provided
+2026-03-12 16:35:19.737 [error] Failed to initialize Confluence client: Personal Access Token is required when using PAT authentication
+2026-03-12 16:35:19.737 [error] ConfluenceError: Personal Access Token is required when using PAT authentication
+    at createConfluenceClient (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/client.js:79:23)
+    at initializeConfluenceClient (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/client.js:135:28)
+    at initializeMcpServer (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/server/mcp-server.js:435:45)
+    at Object.<anonymous> (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/index.js:45:38)
+    at Module._compile (node:internal/modules/cjs/loader:1811:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1942:10)
+    at Module.load (node:internal/modules/cjs/loader:1532:32)
+    at Module._load (node:internal/modules/cjs/loader:1334:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+2026-03-12 16:39:33.243 [debug] Initializing ConfigManager from environment variables
+2026-03-12 16:39:33.244 [debug] Loaded config from environment (sensitive data redacted):
+2026-03-12 16:39:33.244 [debug] {
+  "host": "wiki.corp.adobe.com",
+  "authMethod": "[REDACTED]",
+  "port": 1984,
+  "assetsOutputDir": "./cursor-wiki-mcp/assets",
+  "assets": {
+    "extractAssets": false,
+    "outputDir": "./cursor-wiki-mcp/assets",
+    "filenamePrefix": "asset-",
+    "createOutputDirs": true,
+    "useAbsolutePath": true,
+    "assetTypes": [
+      "image",
+      "pdf",
+      "document",
+      "attachment",
+      "plantuml"
+    ]
+  }
+}
+2026-03-12 16:39:33.244 [debug] ConfigManager initialized
+2026-03-12 16:39:33.449 [info] Initializing MCP Server...
+2026-03-12 16:39:33.451 [info] 📦 Build ID: unknown
+2026-03-12 16:39:33.451 [info] 📦 Version: unknown
+2026-03-12 16:39:33.451 [info] 📦 Build Date: unknown
+2026-03-12 16:39:33.451 [info] 📦 Timestamp: 1773326373448
+2026-03-12 16:39:33.452 [debug] Creating Confluence client
+2026-03-12 16:39:33.452 [debug] - Host: wiki.corp.adobe.com
+2026-03-12 16:39:33.452 [debug] Normalized host: wiki.corp.adobe.com
+2026-03-12 16:39:33.452 [debug] Client config host with protocol: https://wiki.corp.adobe.com
+2026-03-12 16:39:33.452 [debug] ApiPrefix: /rest
+2026-03-12 16:39:33.452 [info] Using Personal Access Token authentication method
+2026-03-12 16:39:33.452 [info] Confluence client created successfully for host: wiki.corp.adobe.com
+2026-03-12 16:39:33.452 [info] Registered expert-wiki-editor prompt
+2026-03-12 16:39:33.453 [info] Registered plantuml_diagram_creator prompt
+2026-03-12 16:39:33.453 [info] Registered prompts: expert_wiki_editor, plantuml_diagram_creator
+2026-03-12 16:39:33.453 [info] Prompt "expert_wiki_editor" registered: has description=true, has callback=true
+2026-03-12 16:39:33.453 [info] Prompt "plantuml_diagram_creator" registered: has description=true, has callback=true
+2026-03-12 16:39:33.453 [info] MCP Server initialized successfully
+2026-03-12 16:39:33.454 [info] Wiki MCP Server connected via stdio
+2026-03-12 16:39:33.454 [info] Wiki MCP Server started successfully with stdio transport
+2026-03-12 16:39:43.301 [debug] Initializing ConfigManager from environment variables
+2026-03-12 16:39:43.302 [debug] Loaded config from environment (sensitive data redacted):
+2026-03-12 16:39:43.302 [debug] {
+  "host": "wiki.corp.adobe.com",
+  "authMethod": "[REDACTED]",
+  "port": 1984,
+  "assetsOutputDir": "./cursor-wiki-mcp/assets",
+  "assets": {
+    "extractAssets": false,
+    "outputDir": "./cursor-wiki-mcp/assets",
+    "filenamePrefix": "asset-",
+    "createOutputDirs": true,
+    "useAbsolutePath": true,
+    "assetTypes": [
+      "image",
+      "pdf",
+      "document",
+      "attachment",
+      "plantuml"
+    ]
+  }
+}
+2026-03-12 16:39:43.302 [debug] ConfigManager initialized
+2026-03-12 16:39:43.496 [info] Initializing MCP Server...
+2026-03-12 16:39:43.496 [info] 📦 Build ID: unknown
+2026-03-12 16:39:43.496 [info] 📦 Version: unknown
+2026-03-12 16:39:43.496 [info] 📦 Build Date: unknown
+2026-03-12 16:39:43.496 [info] 📦 Timestamp: 1773326383495
+2026-03-12 16:39:43.497 [debug] Creating Confluence client
+2026-03-12 16:39:43.497 [debug] - Host: wiki.corp.adobe.com
+2026-03-12 16:39:43.497 [debug] Normalized host: wiki.corp.adobe.com
+2026-03-12 16:39:43.497 [debug] Client config host with protocol: https://wiki.corp.adobe.com
+2026-03-12 16:39:43.497 [debug] ApiPrefix: /rest
+2026-03-12 16:39:43.497 [info] Using Personal Access Token authentication method
+2026-03-12 16:39:43.498 [info] Confluence client created successfully for host: wiki.corp.adobe.com
+2026-03-12 16:39:43.498 [info] Registered expert-wiki-editor prompt
+2026-03-12 16:39:43.498 [info] Registered plantuml_diagram_creator prompt
+2026-03-12 16:39:43.498 [info] Registered prompts: expert_wiki_editor, plantuml_diagram_creator
+2026-03-12 16:39:43.498 [info] Prompt "expert_wiki_editor" registered: has description=true, has callback=true
+2026-03-12 16:39:43.498 [info] Prompt "plantuml_diagram_creator" registered: has description=true, has callback=true
+2026-03-12 16:39:43.498 [info] MCP Server initialized successfully
+2026-03-12 16:39:43.499 [info] Wiki MCP Server connected via stdio
+2026-03-12 16:39:43.499 [info] Wiki MCP Server started successfully with stdio transport
+2026-03-12 16:49:14.037 [debug] Initializing ConfigManager from environment variables
+2026-03-12 16:49:14.037 [debug] Loaded config from environment (sensitive data redacted):
+2026-03-12 16:49:14.038 [debug] {
+  "host": "wiki.corp.adobe.com",
+  "authMethod": "[REDACTED]",
+  "port": 1984,
+  "assetsOutputDir": "./cursor-wiki-mcp/assets",
+  "assets": {
+    "extractAssets": false,
+    "outputDir": "./cursor-wiki-mcp/assets",
+    "filenamePrefix": "asset-",
+    "createOutputDirs": true,
+    "useAbsolutePath": true,
+    "assetTypes": [
+      "image",
+      "pdf",
+      "document",
+      "attachment",
+      "plantuml"
+    ]
+  }
+}
+2026-03-12 16:49:14.038 [debug] ConfigManager initialized
+2026-03-12 16:49:14.264 [info] Initializing MCP Server...
+2026-03-12 16:49:14.264 [info] 📦 Build ID: unknown
+2026-03-12 16:49:14.264 [info] 📦 Version: unknown
+2026-03-12 16:49:14.264 [info] 📦 Build Date: unknown
+2026-03-12 16:49:14.264 [info] 📦 Timestamp: 1773326954263
+2026-03-12 16:49:14.265 [debug] Creating Confluence client
+2026-03-12 16:49:14.265 [debug] - Host: wiki.corp.adobe.com
+2026-03-12 16:49:14.265 [debug] Normalized host: wiki.corp.adobe.com
+2026-03-12 16:49:14.265 [debug] Client config host with protocol: https://wiki.corp.adobe.com
+2026-03-12 16:49:14.265 [debug] ApiPrefix: /rest
+2026-03-12 16:49:14.265 [info] Using Personal Access Token authentication method
+2026-03-12 16:49:14.266 [info] Confluence client created successfully for host: wiki.corp.adobe.com
+2026-03-12 16:49:14.266 [info] Registered expert-wiki-editor prompt
+2026-03-12 16:49:14.266 [info] Registered plantuml_diagram_creator prompt
+2026-03-12 16:49:14.266 [info] Registered prompts: expert_wiki_editor, plantuml_diagram_creator
+2026-03-12 16:49:14.266 [info] Prompt "expert_wiki_editor" registered: has description=true, has callback=true
+2026-03-12 16:49:14.266 [info] Prompt "plantuml_diagram_creator" registered: has description=true, has callback=true
+2026-03-12 16:49:14.266 [info] MCP Server initialized successfully
+2026-03-12 16:49:14.267 [info] Wiki MCP Server connected via stdio
+2026-03-12 16:49:14.267 [info] Wiki MCP Server started successfully with stdio transport
+2026-03-12 16:49:14.272 [info] Transport closed
+2026-03-12 16:49:14.272 [info] MCP server closed
+2026-03-12 16:49:52.366 [debug] Initializing ConfigManager from environment variables
+2026-03-12 16:49:52.367 [debug] Loaded config from environment (sensitive data redacted):
+2026-03-12 16:49:52.367 [debug] {
+  "host": "wiki.corp.adobe.com",
+  "authMethod": "[REDACTED]",
+  "port": 1984,
+  "assetsOutputDir": "./cursor-wiki-mcp/assets",
+  "assets": {
+    "extractAssets": false,
+    "outputDir": "./cursor-wiki-mcp/assets",
+    "filenamePrefix": "asset-",
+    "createOutputDirs": true,
+    "useAbsolutePath": true,
+    "assetTypes": [
+      "image",
+      "pdf",
+      "document",
+      "attachment",
+      "plantuml"
+    ]
+  }
+}
+2026-03-12 16:49:52.367 [debug] ConfigManager initialized
+2026-03-12 16:49:52.649 [info] Initializing MCP Server...
+2026-03-12 16:49:52.650 [info] 📦 Build ID: unknown
+2026-03-12 16:49:52.650 [info] 📦 Version: unknown
+2026-03-12 16:49:52.650 [info] 📦 Build Date: unknown
+2026-03-12 16:49:52.650 [info] 📦 Timestamp: 1773326992648
+2026-03-12 16:49:52.651 [debug] Creating Confluence client
+2026-03-12 16:49:52.651 [debug] - Host: wiki.corp.adobe.com
+2026-03-12 16:49:52.651 [debug] Normalized host: wiki.corp.adobe.com
+2026-03-12 16:49:52.651 [debug] Client config host with protocol: https://wiki.corp.adobe.com
+2026-03-12 16:49:52.651 [debug] ApiPrefix: /rest
+2026-03-12 16:49:52.652 [info] Using Personal Access Token authentication method
+2026-03-12 16:49:52.652 [info] Confluence client created successfully for host: wiki.corp.adobe.com
+2026-03-12 16:49:52.652 [info] Registered expert-wiki-editor prompt
+2026-03-12 16:49:52.652 [info] Registered plantuml_diagram_creator prompt
+2026-03-12 16:49:52.652 [info] Registered prompts: expert_wiki_editor, plantuml_diagram_creator
+2026-03-12 16:49:52.652 [info] Prompt "expert_wiki_editor" registered: has description=true, has callback=true
+2026-03-12 16:49:52.652 [info] Prompt "plantuml_diagram_creator" registered: has description=true, has callback=true
+2026-03-12 16:49:52.652 [info] MCP Server initialized successfully
+2026-03-12 16:49:52.653 [info] Wiki MCP Server connected via stdio
+2026-03-12 16:49:52.653 [info] Wiki MCP Server started successfully with stdio transport
+2026-03-12 16:50:44.637 [debug] MCP search-wiki-content called with params: {"query":"sso.corp.adobe.com","limit":10,"expand":"none"}
+2026-03-12 16:50:44.641 [debug] Searching Wiki content with CQL: text ~ "sso.corp.adobe.com"
+2026-03-12 16:50:44.641 [debug] Limit: 10, Cursor: undefined, Expand: none
+2026-03-12 16:51:44.452 [debug] MCP search-wiki-content called with params: {"query":"register application OKTA authentication","limit":10,"expand":"none"}
+2026-03-12 16:51:44.454 [debug] Searching Wiki content with CQL: text ~ "register application OKTA authentication"
+2026-03-12 16:51:44.454 [debug] Limit: 10, Cursor: undefined, Expand: none
+2026-03-12 16:53:13.271 [debug] MCP get-wiki-content called with params: {"url":"/pages/viewpage.action?pageId=3408287376","preserve_macros":true,"extract_assets":false,"asset_types":"all"}
+2026-03-12 16:53:13.272 [debug] Fetching wiki content from URL: /pages/viewpage.action?pageId=3408287376
+2026-03-12 16:53:13.273 [debug] Parsing Confluence URL: https:///pages/viewpage.action?pageId=3408287376
+2026-03-12 16:53:13.274 [debug] Analyzing URL: https:///pages/viewpage.action?pageId=3408287376
+2026-03-12 16:53:13.274 [debug] Pathname: /viewpage.action
+2026-03-12 16:53:13.274 [debug] Search params: ?pageId=3408287376
+2026-03-12 16:53:13.274 [debug] Found pageId parameter: 3408287376
+2026-03-12 16:53:13.275 [debug] Extracted from URL pattern: {"pageId":"3408287376","type":"page"}
+2026-03-12 16:53:13.275 [debug] Fetching content for page ID: 3408287376
+2026-03-12 16:53:14.137 [debug] MCP get-wiki-content called with params: {"url":"/display/~bisswang/Using+OKTA+authentication+within+an+application","preserve_macros":true,"extract_assets":false,"asset_types":"all"}
+2026-03-12 16:53:14.138 [debug] Fetching wiki content from URL: /display/~bisswang/Using+OKTA+authentication+within+an+application
+2026-03-12 16:53:14.139 [debug] Parsing Confluence URL: https:///display/~bisswang/Using+OKTA+authentication+within+an+application
+2026-03-12 16:53:14.139 [debug] Analyzing URL: https:///display/~bisswang/Using+OKTA+authentication+within+an+application
+2026-03-12 16:53:14.139 [debug] Pathname: /~bisswang/Using+OKTA+authentication+within+an+application
+2026-03-12 16:53:14.139 [debug] Search params: 
+2026-03-12 16:53:14.140 [debug] No URL pattern matches found
+2026-03-12 16:53:14.140 [debug] URL pattern extraction failed, attempting to fetch page...
+2026-03-12 16:53:14.140 [debug] Fetching page to extract metadata: https:///display/~bisswang/Using+OKTA+authentication+within+an+application
+2026-03-12 16:53:14.249 [error] Failed to parse Confluence URL: Failed to extract page ID by fetching: request to https://display/~bisswang/Using+OKTA+authentication+within+an+application failed, reason: getaddrinfo ENOTFOUND display: Failed to extract page ID by fetching: request to https://display/~bisswang/Using+OKTA+authentication+within+an+application failed, reason: getaddrinfo ENOTFOUND display
+2026-03-12 16:53:14.249 [error] ConfluenceError: Failed to extract page ID by fetching: request to https://display/~bisswang/Using+OKTA+authentication+within+an+application failed, reason: getaddrinfo ENOTFOUND display
+    at extractByFetchingPage (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/url-parser.js:244:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async parseConfluenceUrl (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/url-parser.js:74:16)
+    at async fetchWikiPageContent (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/content-manager.js:86:29)
+    at async getWikiContent (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/content-manager.js:159:27)
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/server/mcp-server.js:163:26
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/utils/error-handler.js:94:20
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/node_modules/@modelcontextprotocol/sdk/dist/cjs/server/mcp.js:87:30
+2026-03-12 16:53:14.249 [error] Error fetching wiki content:: Failed to parse URL: Failed to extract page ID by fetching: request to https://display/~bisswang/Using+OKTA+authentication+within+an+application failed, reason: getaddrinfo ENOTFOUND display
+2026-03-12 16:53:14.250 [error] ConfluenceError: Failed to parse URL: Failed to extract page ID by fetching: request to https://display/~bisswang/Using+OKTA+authentication+within+an+application failed, reason: getaddrinfo ENOTFOUND display
+    at parseConfluenceUrl (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/url-parser.js:80:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async fetchWikiPageContent (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/content-manager.js:86:29)
+    at async getWikiContent (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/content-manager.js:159:27)
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/server/mcp-server.js:163:26
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/utils/error-handler.js:94:20
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/node_modules/@modelcontextprotocol/sdk/dist/cjs/server/mcp.js:87:30
+2026-03-12 16:55:52.799 [debug] Initializing ConfigManager from environment variables
+2026-03-12 16:55:52.799 [debug] Initializing ConfigManager from environment variables
+2026-03-12 16:55:52.800 [debug] Loaded config from environment (sensitive data redacted):
+2026-03-12 16:55:52.800 [debug] Loaded config from environment (sensitive data redacted):
+2026-03-12 16:55:52.800 [debug] {
+  "host": "wiki.corp.adobe.com",
+  "authMethod": "[REDACTED]",
+  "port": 1984,
+  "assetsOutputDir": "./cursor-wiki-mcp/assets",
+  "assets": {
+    "extractAssets": false,
+    "outputDir": "./cursor-wiki-mcp/assets",
+    "filenamePrefix": "asset-",
+    "createOutputDirs": true,
+    "useAbsolutePath": true,
+    "assetTypes": [
+      "image",
+      "pdf",
+      "document",
+      "attachment",
+      "plantuml"
+    ]
+  }
+}
+2026-03-12 16:55:52.800 [debug] {
+  "host": "wiki.corp.adobe.com",
+  "authMethod": "[REDACTED]",
+  "port": 1984,
+  "assetsOutputDir": "./cursor-wiki-mcp/assets",
+  "assets": {
+    "extractAssets": false,
+    "outputDir": "./cursor-wiki-mcp/assets",
+    "filenamePrefix": "asset-",
+    "createOutputDirs": true,
+    "useAbsolutePath": true,
+    "assetTypes": [
+      "image",
+      "pdf",
+      "document",
+      "attachment",
+      "plantuml"
+    ]
+  }
+}
+2026-03-12 16:55:52.800 [debug] ConfigManager initialized
+2026-03-12 16:55:52.800 [debug] ConfigManager initialized
+2026-03-12 16:55:53.078 [info] Initializing MCP Server...
+2026-03-12 16:55:53.078 [info] Initializing MCP Server...
+2026-03-12 16:55:53.078 [info] 📦 Build ID: unknown
+2026-03-12 16:55:53.079 [info] 📦 Build ID: unknown
+2026-03-12 16:55:53.079 [info] 📦 Version: unknown
+2026-03-12 16:55:53.079 [info] 📦 Version: unknown
+2026-03-12 16:55:53.079 [info] 📦 Build Date: unknown
+2026-03-12 16:55:53.079 [info] 📦 Timestamp: 1773327353078
+2026-03-12 16:55:53.079 [info] 📦 Build Date: unknown
+2026-03-12 16:55:53.079 [info] 📦 Timestamp: 1773327353078
+2026-03-12 16:55:53.080 [debug] Creating Confluence client
+2026-03-12 16:55:53.080 [debug] Creating Confluence client
+2026-03-12 16:55:53.080 [debug] - Host: wiki.corp.adobe.com
+2026-03-12 16:55:53.080 [debug] - Host: wiki.corp.adobe.com
+2026-03-12 16:55:53.080 [debug] Normalized host: wiki.corp.adobe.com
+2026-03-12 16:55:53.080 [debug] Normalized host: wiki.corp.adobe.com
+2026-03-12 16:55:53.080 [debug] Client config host with protocol: https://wiki.corp.adobe.com
+2026-03-12 16:55:53.080 [debug] Client config host with protocol: https://wiki.corp.adobe.com
+2026-03-12 16:55:53.080 [debug] ApiPrefix: /rest
+2026-03-12 16:55:53.080 [debug] ApiPrefix: /rest
+2026-03-12 16:55:53.080 [info] Using Personal Access Token authentication method
+2026-03-12 16:55:53.080 [info] Using Personal Access Token authentication method
+2026-03-12 16:55:53.080 [info] Confluence client created successfully for host: wiki.corp.adobe.com
+2026-03-12 16:55:53.080 [info] Confluence client created successfully for host: wiki.corp.adobe.com
+2026-03-12 16:55:53.081 [info] Registered expert-wiki-editor prompt
+2026-03-12 16:55:53.081 [info] Registered expert-wiki-editor prompt
+2026-03-12 16:55:53.081 [info] Registered plantuml_diagram_creator prompt
+2026-03-12 16:55:53.081 [info] Registered prompts: expert_wiki_editor, plantuml_diagram_creator
+2026-03-12 16:55:53.081 [info] Registered plantuml_diagram_creator prompt
+2026-03-12 16:55:53.081 [info] Prompt "expert_wiki_editor" registered: has description=true, has callback=true
+2026-03-12 16:55:53.081 [info] Registered prompts: expert_wiki_editor, plantuml_diagram_creator
+2026-03-12 16:55:53.081 [info] Prompt "plantuml_diagram_creator" registered: has description=true, has callback=true
+2026-03-12 16:55:53.081 [info] Prompt "expert_wiki_editor" registered: has description=true, has callback=true
+2026-03-12 16:55:53.081 [info] MCP Server initialized successfully
+2026-03-12 16:55:53.081 [info] Prompt "plantuml_diagram_creator" registered: has description=true, has callback=true
+2026-03-12 16:55:53.081 [info] MCP Server initialized successfully
+2026-03-12 16:55:53.082 [info] Wiki MCP Server connected via stdio
+2026-03-12 16:55:53.082 [info] Wiki MCP Server started successfully with stdio transport
+2026-03-12 16:55:53.082 [info] Wiki MCP Server connected via stdio
+2026-03-12 16:55:53.082 [info] Wiki MCP Server started successfully with stdio transport
+2026-03-12 16:56:02.594 [debug] Initializing ConfigManager from environment variables
+2026-03-12 16:56:02.594 [debug] Initializing ConfigManager from environment variables
+2026-03-12 16:56:02.595 [debug] Loaded config from environment (sensitive data redacted):
+2026-03-12 16:56:02.595 [debug] Loaded config from environment (sensitive data redacted):
+2026-03-12 16:56:02.595 [debug] {
+  "host": "wiki.corp.adobe.com",
+  "authMethod": "[REDACTED]",
+  "port": 1984,
+  "assetsOutputDir": "./cursor-wiki-mcp/assets",
+  "assets": {
+    "extractAssets": false,
+    "outputDir": "./cursor-wiki-mcp/assets",
+    "filenamePrefix": "asset-",
+    "createOutputDirs": true,
+    "useAbsolutePath": true,
+    "assetTypes": [
+      "image",
+      "pdf",
+      "document",
+      "attachment",
+      "plantuml"
+    ]
+  }
+}
+2026-03-12 16:56:02.595 [debug] {
+  "host": "wiki.corp.adobe.com",
+  "authMethod": "[REDACTED]",
+  "port": 1984,
+  "assetsOutputDir": "./cursor-wiki-mcp/assets",
+  "assets": {
+    "extractAssets": false,
+    "outputDir": "./cursor-wiki-mcp/assets",
+    "filenamePrefix": "asset-",
+    "createOutputDirs": true,
+    "useAbsolutePath": true,
+    "assetTypes": [
+      "image",
+      "pdf",
+      "document",
+      "attachment",
+      "plantuml"
+    ]
+  }
+}
+2026-03-12 16:56:02.595 [debug] ConfigManager initialized
+2026-03-12 16:56:02.595 [debug] ConfigManager initialized
+2026-03-12 16:56:02.843 [info] Initializing MCP Server...
+2026-03-12 16:56:02.843 [info] Initializing MCP Server...
+2026-03-12 16:56:02.843 [info] 📦 Build ID: unknown
+2026-03-12 16:56:02.843 [info] 📦 Build ID: unknown
+2026-03-12 16:56:02.843 [info] 📦 Version: unknown
+2026-03-12 16:56:02.843 [info] 📦 Version: unknown
+2026-03-12 16:56:02.843 [info] 📦 Build Date: unknown
+2026-03-12 16:56:02.843 [info] 📦 Timestamp: 1773327362842
+2026-03-12 16:56:02.843 [info] 📦 Build Date: unknown
+2026-03-12 16:56:02.843 [info] 📦 Timestamp: 1773327362842
+2026-03-12 16:56:02.844 [debug] Creating Confluence client
+2026-03-12 16:56:02.844 [debug] Creating Confluence client
+2026-03-12 16:56:02.844 [debug] - Host: wiki.corp.adobe.com
+2026-03-12 16:56:02.844 [debug] - Host: wiki.corp.adobe.com
+2026-03-12 16:56:02.844 [debug] Normalized host: wiki.corp.adobe.com
+2026-03-12 16:56:02.844 [debug] Normalized host: wiki.corp.adobe.com
+2026-03-12 16:56:02.844 [debug] Client config host with protocol: https://wiki.corp.adobe.com
+2026-03-12 16:56:02.844 [debug] Client config host with protocol: https://wiki.corp.adobe.com
+2026-03-12 16:56:02.844 [debug] ApiPrefix: /rest
+2026-03-12 16:56:02.844 [debug] ApiPrefix: /rest
+2026-03-12 16:56:02.844 [info] Using Personal Access Token authentication method
+2026-03-12 16:56:02.844 [info] Using Personal Access Token authentication method
+2026-03-12 16:56:02.845 [info] Confluence client created successfully for host: wiki.corp.adobe.com
+2026-03-12 16:56:02.845 [info] Confluence client created successfully for host: wiki.corp.adobe.com
+2026-03-12 16:56:02.845 [info] Registered expert-wiki-editor prompt
+2026-03-12 16:56:02.845 [info] Registered expert-wiki-editor prompt
+2026-03-12 16:56:02.845 [info] Registered plantuml_diagram_creator prompt
+2026-03-12 16:56:02.845 [info] Registered plantuml_diagram_creator prompt
+2026-03-12 16:56:02.845 [info] Registered prompts: expert_wiki_editor, plantuml_diagram_creator
+2026-03-12 16:56:02.845 [info] Registered prompts: expert_wiki_editor, plantuml_diagram_creator
+2026-03-12 16:56:02.845 [info] Prompt "expert_wiki_editor" registered: has description=true, has callback=true
+2026-03-12 16:56:02.845 [info] Prompt "expert_wiki_editor" registered: has description=true, has callback=true
+2026-03-12 16:56:02.845 [info] Prompt "plantuml_diagram_creator" registered: has description=true, has callback=true
+2026-03-12 16:56:02.845 [info] Prompt "plantuml_diagram_creator" registered: has description=true, has callback=true
+2026-03-12 16:56:02.845 [info] MCP Server initialized successfully
+2026-03-12 16:56:02.845 [info] MCP Server initialized successfully
+2026-03-12 16:56:02.846 [info] Wiki MCP Server connected via stdio
+2026-03-12 16:56:02.846 [info] Wiki MCP Server connected via stdio
+2026-03-12 16:56:02.846 [info] Wiki MCP Server started successfully with stdio transport
+2026-03-12 16:56:02.846 [info] Wiki MCP Server started successfully with stdio transport
+2026-03-13 12:40:43.416 [debug] MCP search-wiki-content called with params: {"query":"Azure Graph API application registration Microsoft Teams integration","limit":8,"expand":"none"}
+2026-03-13 12:40:43.418 [debug] Searching Wiki content with CQL: text ~ "Azure Graph API application registration Microsoft Teams integration"
+2026-03-13 12:40:43.418 [debug] Limit: 8, Cursor: undefined, Expand: none
+2026-03-13 12:41:11.577 [debug] MCP get-wiki-content called with params: {"url":"/display/dirsvc/App+Registration+and+Service+Principals+-+Complete+Guide","preserve_macros":true,"extract_assets":false,"asset_types":"all"}
+2026-03-13 12:41:11.578 [debug] Fetching wiki content from URL: /display/dirsvc/App+Registration+and+Service+Principals+-+Complete+Guide
+2026-03-13 12:41:11.578 [debug] Parsing Confluence URL: https:///display/dirsvc/App+Registration+and+Service+Principals+-+Complete+Guide
+2026-03-13 12:41:11.578 [debug] Analyzing URL: https:///display/dirsvc/App+Registration+and+Service+Principals+-+Complete+Guide
+2026-03-13 12:41:11.579 [debug] Pathname: /dirsvc/App+Registration+and+Service+Principals+-+Complete+Guide
+2026-03-13 12:41:11.579 [debug] Search params: 
+2026-03-13 12:41:11.579 [debug] No URL pattern matches found
+2026-03-13 12:41:11.579 [debug] URL pattern extraction failed, attempting to fetch page...
+2026-03-13 12:41:11.579 [debug] Fetching page to extract metadata: https:///display/dirsvc/App+Registration+and+Service+Principals+-+Complete+Guide
+2026-03-13 12:41:12.068 [error] Failed to parse Confluence URL: Failed to extract page ID by fetching: request to https://display/dirsvc/App+Registration+and+Service+Principals+-+Complete+Guide failed, reason: getaddrinfo ENOTFOUND display: Failed to extract page ID by fetching: request to https://display/dirsvc/App+Registration+and+Service+Principals+-+Complete+Guide failed, reason: getaddrinfo ENOTFOUND display
+2026-03-13 12:41:12.069 [error] ConfluenceError: Failed to extract page ID by fetching: request to https://display/dirsvc/App+Registration+and+Service+Principals+-+Complete+Guide failed, reason: getaddrinfo ENOTFOUND display
+    at extractByFetchingPage (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/url-parser.js:244:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async parseConfluenceUrl (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/url-parser.js:74:16)
+    at async fetchWikiPageContent (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/content-manager.js:86:29)
+    at async getWikiContent (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/content-manager.js:159:27)
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/server/mcp-server.js:163:26
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/utils/error-handler.js:94:20
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/node_modules/@modelcontextprotocol/sdk/dist/cjs/server/mcp.js:87:30
+2026-03-13 12:41:12.069 [error] Error fetching wiki content:: Failed to parse URL: Failed to extract page ID by fetching: request to https://display/dirsvc/App+Registration+and+Service+Principals+-+Complete+Guide failed, reason: getaddrinfo ENOTFOUND display
+2026-03-13 12:41:12.070 [error] ConfluenceError: Failed to parse URL: Failed to extract page ID by fetching: request to https://display/dirsvc/App+Registration+and+Service+Principals+-+Complete+Guide failed, reason: getaddrinfo ENOTFOUND display
+    at parseConfluenceUrl (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/url-parser.js:80:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async fetchWikiPageContent (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/content-manager.js:86:29)
+    at async getWikiContent (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/content-manager.js:159:27)
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/server/mcp-server.js:163:26
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/utils/error-handler.js:94:20
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/node_modules/@modelcontextprotocol/sdk/dist/cjs/server/mcp.js:87:30
+2026-03-13 12:41:15.755 [debug] MCP get-wiki-content called with params: {"url":"/pages/viewpage.action?pageId=3641904800","preserve_macros":true,"extract_assets":false,"asset_types":"all"}
+2026-03-13 12:41:15.755 [debug] Fetching wiki content from URL: /pages/viewpage.action?pageId=3641904800
+2026-03-13 12:41:15.755 [debug] Parsing Confluence URL: https:///pages/viewpage.action?pageId=3641904800
+2026-03-13 12:41:15.756 [debug] Analyzing URL: https:///pages/viewpage.action?pageId=3641904800
+2026-03-13 12:41:15.756 [debug] Pathname: /viewpage.action
+2026-03-13 12:41:15.756 [debug] Search params: ?pageId=3641904800
+2026-03-13 12:41:15.756 [debug] Found pageId parameter: 3641904800
+2026-03-13 12:41:15.756 [debug] Extracted from URL pattern: {"pageId":"3641904800","type":"page"}
+2026-03-13 12:41:15.756 [debug] Fetching content for page ID: 3641904800
+2026-03-13 15:19:51.885 [debug] Initializing ConfigManager from environment variables
+2026-03-13 15:19:51.888 [debug] Loaded config from environment (sensitive data redacted):
+2026-03-13 15:19:51.888 [debug] {
+  "host": "wiki.corp.adobe.com",
+  "authMethod": "[REDACTED]",
+  "port": 1984,
+  "assetsOutputDir": "./cursor-wiki-mcp/assets",
+  "assets": {
+    "extractAssets": false,
+    "outputDir": "./cursor-wiki-mcp/assets",
+    "filenamePrefix": "asset-",
+    "createOutputDirs": true,
+    "useAbsolutePath": true,
+    "assetTypes": [
+      "image",
+      "pdf",
+      "document",
+      "attachment",
+      "plantuml"
+    ]
+  }
+}
+2026-03-13 15:19:51.888 [debug] ConfigManager initialized
+2026-03-13 15:19:52.123 [info] Initializing MCP Server...
+2026-03-13 15:19:52.123 [info] 📦 Build ID: unknown
+2026-03-13 15:19:52.123 [info] 📦 Version: unknown
+2026-03-13 15:19:52.123 [info] 📦 Build Date: unknown
+2026-03-13 15:19:52.123 [info] 📦 Timestamp: 1773407992122
+2026-03-13 15:19:52.124 [debug] Creating Confluence client
+2026-03-13 15:19:52.124 [debug] - Host: wiki.corp.adobe.com
+2026-03-13 15:19:52.125 [debug] Normalized host: wiki.corp.adobe.com
+2026-03-13 15:19:52.125 [debug] Client config host with protocol: https://wiki.corp.adobe.com
+2026-03-13 15:19:52.125 [debug] ApiPrefix: /rest
+2026-03-13 15:19:52.125 [info] Using Personal Access Token authentication method
+2026-03-13 15:19:52.125 [info] Confluence client created successfully for host: wiki.corp.adobe.com
+2026-03-13 15:19:52.126 [info] Registered expert-wiki-editor prompt
+2026-03-13 15:19:52.126 [info] Registered plantuml_diagram_creator prompt
+2026-03-13 15:19:52.126 [info] Registered prompts: expert_wiki_editor, plantuml_diagram_creator
+2026-03-13 15:19:52.126 [info] Prompt "expert_wiki_editor" registered: has description=true, has callback=true
+2026-03-13 15:19:52.126 [info] Prompt "plantuml_diagram_creator" registered: has description=true, has callback=true
+2026-03-13 15:19:52.126 [info] MCP Server initialized successfully
+2026-03-13 15:19:52.127 [info] Wiki MCP Server connected via stdio
+2026-03-13 15:19:52.127 [info] Wiki MCP Server started successfully with stdio transport
+2026-03-13 15:20:58.906 [debug] MCP search-wiki-content called with params: {"query":"MCP server Microsoft Teams SharePoint","limit":10,"expand":"none"}
+2026-03-13 15:20:58.907 [debug] Searching Wiki content with CQL: text ~ "MCP server Microsoft Teams SharePoint"
+2026-03-13 15:20:58.907 [debug] Limit: 10, Cursor: undefined, Expand: none
+2026-03-13 15:21:11.394 [debug] MCP get-wiki-content called with params: {"url":"/display/~wbao/MCP+Server+for+GraphAPI","preserve_macros":true,"extract_assets":false,"asset_types":"all"}
+2026-03-13 15:21:11.395 [debug] Fetching wiki content from URL: /display/~wbao/MCP+Server+for+GraphAPI
+2026-03-13 15:21:11.396 [debug] Parsing Confluence URL: https:///display/~wbao/MCP+Server+for+GraphAPI
+2026-03-13 15:21:11.396 [debug] Analyzing URL: https:///display/~wbao/MCP+Server+for+GraphAPI
+2026-03-13 15:21:11.397 [debug] Pathname: /~wbao/MCP+Server+for+GraphAPI
+2026-03-13 15:21:11.397 [debug] Search params: 
+2026-03-13 15:21:11.397 [debug] No URL pattern matches found
+2026-03-13 15:21:11.397 [debug] URL pattern extraction failed, attempting to fetch page...
+2026-03-13 15:21:11.398 [debug] Fetching page to extract metadata: https:///display/~wbao/MCP+Server+for+GraphAPI
+2026-03-13 15:21:11.904 [error] Failed to parse Confluence URL: Failed to extract page ID by fetching: request to https://display/~wbao/MCP+Server+for+GraphAPI failed, reason: getaddrinfo ENOTFOUND display: Failed to extract page ID by fetching: request to https://display/~wbao/MCP+Server+for+GraphAPI failed, reason: getaddrinfo ENOTFOUND display
+2026-03-13 15:21:11.905 [error] ConfluenceError: Failed to extract page ID by fetching: request to https://display/~wbao/MCP+Server+for+GraphAPI failed, reason: getaddrinfo ENOTFOUND display
+    at extractByFetchingPage (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/url-parser.js:244:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async parseConfluenceUrl (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/url-parser.js:74:16)
+    at async fetchWikiPageContent (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/content-manager.js:86:29)
+    at async getWikiContent (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/content-manager.js:159:27)
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/server/mcp-server.js:163:26
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/utils/error-handler.js:94:20
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/node_modules/@modelcontextprotocol/sdk/dist/cjs/server/mcp.js:87:30
+2026-03-13 15:21:11.906 [error] Error fetching wiki content:: Failed to parse URL: Failed to extract page ID by fetching: request to https://display/~wbao/MCP+Server+for+GraphAPI failed, reason: getaddrinfo ENOTFOUND display
+2026-03-13 15:21:11.906 [error] ConfluenceError: Failed to parse URL: Failed to extract page ID by fetching: request to https://display/~wbao/MCP+Server+for+GraphAPI failed, reason: getaddrinfo ENOTFOUND display
+    at parseConfluenceUrl (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/url-parser.js:80:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async fetchWikiPageContent (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/content-manager.js:86:29)
+    at async getWikiContent (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/content-manager.js:159:27)
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/server/mcp-server.js:163:26
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/utils/error-handler.js:94:20
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/node_modules/@modelcontextprotocol/sdk/dist/cjs/server/mcp.js:87:30
+2026-03-13 15:21:11.914 [debug] MCP get-wiki-content called with params: {"url":"/display/DMARomania/Claude+Code+and+MCP+Servers+All+in+One+Setup+Guide","preserve_macros":true,"extract_assets":false,"asset_types":"all"}
+2026-03-13 15:21:11.914 [debug] Fetching wiki content from URL: /display/DMARomania/Claude+Code+and+MCP+Servers+All+in+One+Setup+Guide
+2026-03-13 15:21:11.915 [debug] Parsing Confluence URL: https:///display/DMARomania/Claude+Code+and+MCP+Servers+All+in+One+Setup+Guide
+2026-03-13 15:21:11.915 [debug] Analyzing URL: https:///display/DMARomania/Claude+Code+and+MCP+Servers+All+in+One+Setup+Guide
+2026-03-13 15:21:11.915 [debug] Pathname: /DMARomania/Claude+Code+and+MCP+Servers+All+in+One+Setup+Guide
+2026-03-13 15:21:11.915 [debug] Search params: 
+2026-03-13 15:21:11.916 [debug] No URL pattern matches found
+2026-03-13 15:21:11.916 [debug] URL pattern extraction failed, attempting to fetch page...
+2026-03-13 15:21:11.916 [debug] Fetching page to extract metadata: https:///display/DMARomania/Claude+Code+and+MCP+Servers+All+in+One+Setup+Guide
+2026-03-13 15:21:11.923 [error] Failed to parse Confluence URL: Failed to extract page ID by fetching: request to https://display/DMARomania/Claude+Code+and+MCP+Servers+All+in+One+Setup+Guide failed, reason: getaddrinfo ENOTFOUND display: Failed to extract page ID by fetching: request to https://display/DMARomania/Claude+Code+and+MCP+Servers+All+in+One+Setup+Guide failed, reason: getaddrinfo ENOTFOUND display
+2026-03-13 15:21:11.923 [error] ConfluenceError: Failed to extract page ID by fetching: request to https://display/DMARomania/Claude+Code+and+MCP+Servers+All+in+One+Setup+Guide failed, reason: getaddrinfo ENOTFOUND display
+    at extractByFetchingPage (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/url-parser.js:244:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async parseConfluenceUrl (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/url-parser.js:74:16)
+    at async fetchWikiPageContent (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/content-manager.js:86:29)
+    at async getWikiContent (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/content-manager.js:159:27)
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/server/mcp-server.js:163:26
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/utils/error-handler.js:94:20
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/node_modules/@modelcontextprotocol/sdk/dist/cjs/server/mcp.js:87:30
+2026-03-13 15:21:11.923 [error] Error fetching wiki content:: Failed to parse URL: Failed to extract page ID by fetching: request to https://display/DMARomania/Claude+Code+and+MCP+Servers+All+in+One+Setup+Guide failed, reason: getaddrinfo ENOTFOUND display
+2026-03-13 15:21:11.923 [error] ConfluenceError: Failed to parse URL: Failed to extract page ID by fetching: request to https://display/DMARomania/Claude+Code+and+MCP+Servers+All+in+One+Setup+Guide failed, reason: getaddrinfo ENOTFOUND display
+    at parseConfluenceUrl (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/url-parser.js:80:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async fetchWikiPageContent (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/content-manager.js:86:29)
+    at async getWikiContent (/Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/confluence/content-manager.js:159:27)
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/server/mcp-server.js:163:26
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/mcp-server/utils/error-handler.js:94:20
+    at async /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/node_modules/@modelcontextprotocol/sdk/dist/cjs/server/mcp.js:87:30
+2026-03-13 15:21:19.273 [debug] MCP search-wiki-content called with params: {"query":"MCP Server GraphAPI Microsoft","cql":"id = 3578862551","limit":10,"expand":"none"}
+2026-03-13 15:21:19.273 [debug] Searching Wiki content with CQL: id = 3578862551
+2026-03-13 15:21:19.274 [debug] Limit: 10, Cursor: undefined, Expand: none
+2026-03-13 15:21:24.744 [debug] MCP get-wiki-content called with params: {"url":"https://wiki.corp.adobe.com/display/~wbao/MCP+Server+for+GraphAPI","preserve_macros":true,"extract_assets":false,"asset_types":"all"}
+2026-03-13 15:21:24.744 [debug] Fetching wiki content from URL: https://wiki.corp.adobe.com/display/~wbao/MCP+Server+for+GraphAPI
+2026-03-13 15:21:24.744 [debug] Parsing Confluence URL: https://wiki.corp.adobe.com/display/~wbao/MCP+Server+for+GraphAPI
+2026-03-13 15:21:24.744 [debug] Analyzing URL: https://wiki.corp.adobe.com/display/~wbao/MCP+Server+for+GraphAPI
+2026-03-13 15:21:24.744 [debug] Pathname: /display/~wbao/MCP+Server+for+GraphAPI
+2026-03-13 15:21:24.745 [debug] Search params: 
+2026-03-13 15:21:24.745 [debug] Found display pattern. Space: ~wbao, Title: MCP Server for GraphAPI
+2026-03-13 15:21:24.745 [debug] Extracted from URL pattern: {"pageId":"lookup_required","type":"page","space":"~wbao","title":"MCP Server for GraphAPI"}
+2026-03-13 15:21:24.745 [debug] Looking up page by space: ~wbao and title: MCP Server for GraphAPI
+2026-03-13 15:21:25.105 [debug] Found pageId 3578862551 by exact space and title lookup via SDK
+2026-03-13 15:21:25.107 [debug] Fetching content for page ID: 3578862551
+2026-03-13 15:21:25.420 [debug] MCP get-wiki-content called with params: {"url":"https://wiki.corp.adobe.com/display/DMARomania/Claude+Code+and+MCP+Servers+All+in+One+Setup+Guide","preserve_macros":true,"extract_assets":false,"asset_types":"all"}
+2026-03-13 15:21:25.420 [debug] Fetching wiki content from URL: https://wiki.corp.adobe.com/display/DMARomania/Claude+Code+and+MCP+Servers+All+in+One+Setup+Guide
+2026-03-13 15:21:25.420 [debug] Parsing Confluence URL: https://wiki.corp.adobe.com/display/DMARomania/Claude+Code+and+MCP+Servers+All+in+One+Setup+Guide
+2026-03-13 15:21:25.421 [debug] Analyzing URL: https://wiki.corp.adobe.com/display/DMARomania/Claude+Code+and+MCP+Servers+All+in+One+Setup+Guide
+2026-03-13 15:21:25.421 [debug] Pathname: /display/DMARomania/Claude+Code+and+MCP+Servers+All+in+One+Setup+Guide
+2026-03-13 15:21:25.421 [debug] Search params: 
+2026-03-13 15:21:25.421 [debug] Found display pattern. Space: DMARomania, Title: Claude Code and MCP Servers All in One Setup Guide
+2026-03-13 15:21:25.421 [debug] Extracted from URL pattern: {"pageId":"lookup_required","type":"page","space":"DMARomania","title":"Claude Code and MCP Servers All in One Setup Guide"}
+2026-03-13 15:21:25.421 [debug] Looking up page by space: DMARomania and title: Claude Code and MCP Servers All in One Setup Guide
+2026-03-13 15:21:25.722 [debug] Found pageId 3763510537 by exact space and title lookup via SDK
+2026-03-13 15:21:25.723 [debug] Fetching content for page ID: 3763510537
+2026-03-13 15:23:57.794 [debug] MCP search-wiki-content called with params: {"query":"Microsoft Teams Graph API MCP meeting transcripts","limit":8,"expand":"none"}
+2026-03-13 15:23:57.795 [debug] Searching Wiki content with CQL: text ~ "Microsoft Teams Graph API MCP meeting transcripts"
+2026-03-13 15:23:57.795 [debug] Limit: 8, Cursor: undefined, Expand: none

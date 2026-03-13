@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/droinishvili/.claude/**)",
+      "Read(//Users/droinishvili/**)",
+      "Bash(cd /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki && node -e \"const {configManager} = require\\('./dist/mcp-server/utils/config-manager'\\); const cfg = configManager.getConfig\\(\\); console.log\\('token length:', cfg.token ? cfg.token.length : 0\\); console.log\\('authMethod:', cfg.authMethod\\);\" 2>&1)",
+      "Bash(cd /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki && echo '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"test\",\"version\":\"1.0\"}}}' | timeout 5 node dist/index.js 2>&1)",
+      "Bash(echo '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"test\",\"version\":\"1.0\"}}}' | timeout 5 /bin/sh -c \"cd /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki && node dist/index.js\" 2>&1)",
+      "Bash(echo '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"test\",\"version\":\"1.0\"}}}' | node /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki/dist/index.js 2>/dev/null | head -5)",
+      "Bash(cd /Users/droinishvili/projects/adobe-mcp-servers/src/adobe-wiki && WIKI_MCP_TOKEN=\"MjY5NzA3Mjc3NTY3OqLgIuxYjJ5L8YTAlv4TA63rewM7\" WIKI_MCP_HOST=\"wiki.corp.adobe.com\" echo '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"test\",\"version\":\"1.0\"}}}' | node dist/index.js 2>&1 | head -30)",
+      "Bash(ls ~/Library/Logs/Claude* 2>/dev/null || ls ~/.claude/logs/ 2>/dev/null || echo \"no logs found\")",
+      "Bash(env -i /bin/sh -c \"which node 2>&1 || echo 'node not found in default PATH'\")",
+      "Bash(claude --version 2>/dev/null || npx claude --version 2>/dev/null)",
+      "Bash(ls ~/.claude/settings*.json 2>/dev/null && ls /Users/droinishvili/projects/meeting-notes-ai/.claude* 2>/dev/null && ls /Users/droinishvili/projects/meeting-notes-ai/claude* 2>/dev/null || true)",
+      "Bash(ls /Users/droinishvili/projects/meeting-notes-ai/.claude* 2>&1)",
+      "Bash(claude mcp:*)",
+      "mcp__wiki-mcp__search_wiki_content",
+      "mcp__wiki-mcp__get_wiki_content"
+    ]
+  }
+}
