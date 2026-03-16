@@ -139,9 +139,36 @@ Add a login page (e.g. `pages/login.html`) served at `/login`. It should show a 
 - Sidebar lists all meetings most recent first; updates after a new analysis is submitted
 - Clicking a sidebar item opens the detail view without a page reload
 - Detail view: title, date, summary, action items, editable tags
-- Tags display as color-coded badges; same tag name always gets the same color (deterministic hash over 8-color palette)
+- Tags display as color-coded badges; same tag name always gets the same color (deterministic hash over 10-color palette defined in `index.html` as `TAG_COLORS`)
 - User can remove a tag from a meeting (unlink only) or add a new one (up to 10 total)
 - A "Back" button returns to the analyze form
+- A "Find similar meetings" button appears below the tags section — triggers `POST /meetings/{id}/similar`
+- Similar meeting results render as cards; clicking the title opens the meeting
+- Each card uses a single table with columns "This meeting" | "{matched meeting title}" | "Match %" | "Why?"
+- Collapsed state: header (title, date, green similarity badge, +/− toggle) + table showing only the best-match row; "+ N more matching topics" row below if multiple matches
+- Expanded state (toggle via +/− button or the "+ N more" link): all matching rows shown, extra row hidden
+- AI-generated descriptions are shown in table cells (readable, wrapping text); falls back to raw topic header when description is absent
+- Best match row has a green border; column widths: 42% / 42% / 7% / 9%
+- "Why?" button calls `POST /matches/explain`, shows explanation in a yellow/amber row below; clicking again hides it
+- Results panel resets when switching to a different meeting
+
+## Similarity Search
+- `POST /meetings/{id}/similar` — finds meetings similar to the given one using chunk embeddings
+- Two-stage pipeline:
+  1. **Embedding filter**: cosine similarity ≥ 0.45 between chunk description embeddings; keeps cheapest possible candidate set
+  2. **LLM re-ranking**: each candidate pair is verified with `verify_match()` in `llm_client.py` — asks the model whether the two topics discuss the same subject matter (not just the same product/domain); pairs that get a "no" are dropped
+- Deduplication: for each (other meeting, source chunk) pair, only the highest-scoring other-meeting chunk is kept — prevents the same source topic appearing multiple times in one result
+- Response: `id`, `title`, `created_at`, `tags`, `score` (best verified score, rounded to 3dp), `all_matches` (list of `ChunkMatch` sorted by score desc, max 3)
+- `ChunkMatch`: `source_chunk`, `matched_chunk`, `source_description`, `matched_description` (both optional — null for old chunks), `score`, `is_best`
+- If the meeting has no chunks with embeddings, returns an empty list
+- Cosine similarity: `dot(a,b) / (norm(a) * norm(b))` in numpy
+- `verify_match` failures are logged and the match is kept (fail open — prefer showing a false positive over hiding a true one)
+
+## Match Explanation
+- `POST /matches/explain` — generates a 1-2 sentence explanation of why two chunks are semantically related
+- Request body: `source_chunk`, `matched_chunk` (frontend sends descriptions when available, falls back to raw chunk text)
+- Calls Azure OpenAI via `explain_match()` in `llm_client.py`; starts with "Both meetings discussed…"
+- Response: `{"explanation": "..."}`
 
 ## Chunk Descriptions & Embeddings
 - After each chunk is saved, `generate_description(chunk)` in `llm_client.py` produces a 1-2 sentence summary of the topic

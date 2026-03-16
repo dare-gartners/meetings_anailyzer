@@ -50,11 +50,17 @@ class MeetingTag(Base):
 
 def init_db():
     Base.metadata.create_all(bind=engine)
-    # Migrate existing chunks table — add columns if absent
+    import sqlalchemy as sa
     with engine.connect() as conn:
-        existing = {row[1] for row in conn.execute(__import__("sqlalchemy").text("PRAGMA table_info(chunks)"))}
-        if "description" not in existing:
-            conn.execute(__import__("sqlalchemy").text("ALTER TABLE chunks ADD COLUMN description TEXT"))
-        if "embedding" not in existing:
-            conn.execute(__import__("sqlalchemy").text("ALTER TABLE chunks ADD COLUMN embedding BLOB"))
+        # meetings table migrations
+        meetings_cols = {row[1] for row in conn.execute(sa.text("PRAGMA table_info(meetings)"))}
+        if "created_at" not in meetings_cols:
+            conn.execute(sa.text("ALTER TABLE meetings ADD COLUMN created_at DATETIME"))
+            conn.execute(sa.text("UPDATE meetings SET created_at = '1970-01-01 00:00:00' WHERE created_at IS NULL"))
+        # chunks table migrations
+        chunks_cols = {row[1] for row in conn.execute(sa.text("PRAGMA table_info(chunks)"))}
+        if "description" not in chunks_cols:
+            conn.execute(sa.text("ALTER TABLE chunks ADD COLUMN description TEXT"))
+        if "embedding" not in chunks_cols:
+            conn.execute(sa.text("ALTER TABLE chunks ADD COLUMN embedding BLOB"))
         conn.commit()
