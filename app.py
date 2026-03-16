@@ -12,7 +12,7 @@ from fastapi.templating import Jinja2Templates
 
 import re
 from models import NotesRequest, NotesResponse, MeetingListItem, MeetingDetail, TagAddRequest
-from llm_client import analyze_notes, generate_tags
+from llm_client import analyze_notes, generate_tags, generate_description, generate_embedding
 from database import init_db, SessionLocal, Meeting, Chunk, Tag, MeetingTag
 from chunking import chunk_text
 
@@ -87,10 +87,29 @@ def analyze(body: NotesRequest, request: Request):
 
         chunks = chunk_text(body.notes)
         saved_chunks = []
+        chunk_rows = []
         for idx, chunk in enumerate(chunks):
             c = Chunk(meeting_id=meeting.id, chunk_index=idx, text=chunk)
             db.add(c)
             saved_chunks.append(chunk)
+            chunk_rows.append(c)
+        db.commit()
+
+        # Description + embedding — failures are isolated per chunk
+        for c, chunk_text_val in zip(chunk_rows, saved_chunks):
+            description = None
+            try:
+                description = generate_description(chunk_text_val)
+                c.description = description
+            except Exception as e:
+                logger.error("Description generation failed for chunk %s: %s", c.id, e)
+
+            if description:
+                try:
+                    c.embedding = generate_embedding(description)
+                except Exception as e:
+                    logger.error("Embedding generation failed for chunk %s: %s", c.id, e)
+
         db.commit()
 
         # Tag generation — failures are isolated per chunk

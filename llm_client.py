@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import numpy as np
 from openai import AzureOpenAI
 from ai_templates import build_prompt
 
@@ -22,6 +23,29 @@ def analyze_notes(notes: str, title: str = "") -> str:
         max_tokens=1024,
     )
     return response.choices[0].message.content
+
+
+def generate_description(chunk: str) -> str:
+    prompt = (
+        "Summarize the following topic from a meeting in 1-2 sentences. "
+        "Focus on what was discussed or decided. Do not start with 'This meeting'.\n\n"
+        f"{chunk}"
+    )
+    response = _client().chat.completions.create(
+        model=os.environ["AZURE_OPENAI_DEPLOYMENT"],
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=128,
+    )
+    return response.choices[0].message.content.strip()
+
+
+def generate_embedding(text: str) -> bytes:
+    response = _client().embeddings.create(
+        model=os.environ["AZURE_OPENAI_EMBEDDING_DEPLOYMENT"],
+        input=text,
+    )
+    vector = np.array(response.data[0].embedding, dtype=np.float32)
+    return vector.tobytes()
 
 
 def generate_tags(chunk: str, existing_tags: list[str]) -> list[str]:

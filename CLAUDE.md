@@ -26,8 +26,10 @@ Use one LLM call per request unless explicitly needed.
   - `AZURE_OPENAI_ENDPOINT` (e.g. `https://<your-resource>.openai.azure.com/`)
   - `AZURE_OPENAI_DEPLOYMENT` (your deployed model name, e.g. `gpt-4o`)
   - `AZURE_OPENAI_MODEL_VERSION` (e.g. `2024-02-01`)
+  - `AZURE_OPENAI_EMBEDDING_DEPLOYMENT` (your embeddings deployment, e.g. `text-embedding-ada-002`)
 - Do not use the Anthropic SDK
 - API key and all other properties must be read from environment variables
+- See `.env.example` for a full list of required environment variables with placeholder values
 
 ## Coding Guidelines
 - Keep code simple and readable
@@ -107,7 +109,8 @@ Add a login page (e.g. `pages/login.html`) served at `/login`. It should show a 
 - `llm_client.py` handles model API calls
 - `ai_templates.py` stores prompt-building logic
 - `models.py` stores request/response schemas
-- `database.py` contains SQLAlchemy models (`Meeting`, `Chunk`, `Tag`, `MeetingTag`) and `init_db()`
+- `database.py` contains SQLAlchemy models (`Meeting`, `Chunk`, `Tag`, `MeetingTag`) and `init_db()` (also runs ALTER TABLE migrations for new columns)
+- `.env.example` documents all required environment variables with placeholder values
 - `chunking.py` contains `chunk_text(notes) -> list[str]` — topic-based chunking for Teams AI format
 - `pages/index.html` contains the UI — inline CSS and JS, no build step required. Layout: fixed sidebar (260px) listing saved meetings + main area showing either the analyze form or a meeting detail view. Style: purple gradient header (`#667eea` → `#764ba2`), white cards with `border-radius: 8px` and `box-shadow`, Inter font via Google Fonts, dark mode via `prefers-color-scheme`.
 - `auth.py` handles Okta authentication — PKCE flow, JWT validation, signed session cookies
@@ -117,12 +120,15 @@ Add a login page (e.g. `pages/login.html`) served at `/login`. It should show a 
 ## Persistence
 - SQLite via SQLAlchemy, stored in `meetings.db`
 - `meetings` table: `id`, `title`, `notes_raw`, `summary`, `action_items` (JSON string), `created_at` (UTC datetime)
-- `chunks` table: `id`, `meeting_id` (FK → meetings, cascade delete), `chunk_index`, `text`
+- `chunks` table: `id`, `meeting_id` (FK → meetings, cascade delete), `chunk_index`, `text`, `description` (TEXT, nullable), `embedding` (BLOB, nullable — numpy float32 array serialized via `.tobytes()`)
 - `tags` table: `id`, `name` (unique across the whole table)
 - `meeting_tags` table: `id`, `meeting_id` (FK → meetings, cascade delete), `tag_id` (FK → tags, cascade delete), unique on `(meeting_id, tag_id)`
 - DB is initialized at app startup via `init_db()`
 - After each successful `/analyze` call, the meeting and its chunks are saved
+- After chunks are saved, for each chunk: a description is generated via LLM, then an embedding is generated from that description and stored as a BLOB
 - After chunks are saved, tags are generated per chunk and linked to the meeting (deduplicated)
+- Description and embedding failures are isolated per chunk — logged but never fail the request
+- New columns are added to existing tables via `ALTER TABLE` in `init_db()` if absent — do not drop or recreate tables
 - DB save failures are logged but never surface to the caller — `/analyze` always returns the LLM result
 
 ## Meeting History & Detail View
@@ -136,6 +142,13 @@ Add a login page (e.g. `pages/login.html`) served at `/login`. It should show a 
 - Tags display as color-coded badges; same tag name always gets the same color (deterministic hash over 8-color palette)
 - User can remove a tag from a meeting (unlink only) or add a new one (up to 10 total)
 - A "Back" button returns to the analyze form
+
+## Chunk Descriptions & Embeddings
+- After each chunk is saved, `generate_description(chunk)` in `llm_client.py` produces a 1-2 sentence summary of the topic
+- The description (not the raw chunk text) is then embedded via `generate_embedding(description)` using `AZURE_OPENAI_EMBEDDING_DEPLOYMENT`
+- Embeddings are stored as numpy float32 arrays serialized with `.tobytes()` in the `embedding` BLOB column
+- Deserialize with `numpy.frombuffer(blob, dtype=numpy.float32)`
+- Both operations are isolated: if description fails, embedding is skipped; neither failure affects `/analyze`
 
 ## Tag Rules
 - Lowercase only
