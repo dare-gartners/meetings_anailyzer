@@ -6,11 +6,14 @@ from datetime import datetime
 class NotesRequest(BaseModel):
     title: str
     notes: str
+    date: Optional[str] = None
+    language: Optional[str] = None
+    recording_url: Optional[str] = None
 
 
 class NotesResponse(BaseModel):
+    id: Optional[int] = None
     summary: str
-    action_items: List[str]
     tags: List[str]
 
 
@@ -25,8 +28,11 @@ class MeetingDetail(BaseModel):
     title: str
     created_at: datetime
     summary: str
-    action_items: List[str]
     tags: List[str]
+    date: Optional[str] = None
+    language: Optional[str] = None
+    recording_url: Optional[str] = None
+    notes_raw: Optional[str] = None
 
 
 class TagAddRequest(BaseModel):

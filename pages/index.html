@@ -184,7 +184,9 @@
     .form-group { display: flex; flex-direction: column; margin-bottom: 1rem; }
     .form-group label { font-weight: 500; margin-bottom: 0.5rem; color: #495057; }
 
-    .form-group input[type="text"] {
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group input[type="url"] {
       padding: 0.75rem;
       border: 1px solid #dee2e6;
       border-radius: 4px;
@@ -193,7 +195,9 @@
       color: #212529;
       transition: border-color 0.2s;
     }
-    .form-group input[type="text"]:focus {
+    .form-group input[type="text"]:focus,
+    .form-group input[type="date"]:focus,
+    .form-group input[type="url"]:focus {
       outline: none; border-color: #667eea;
       box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
     }
@@ -214,6 +218,8 @@
       box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
     }
 
+    .form-actions { display: flex; gap: 0.75rem; align-items: center; }
+
     .submit-btn {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
@@ -228,6 +234,26 @@
     }
     .submit-btn:hover:not(:disabled) { opacity: 0.9; }
     .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .cancel-btn {
+      background: none;
+      color: #6c757d;
+      padding: 0.75rem 1.25rem;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .cancel-btn:hover { background: #f8f9fa; }
+
+    .success-banner {
+      background: #d1e7dd; color: #0a3622;
+      border: 1px solid #badbcc; border-radius: 6px;
+      padding: 0.75rem 1rem; margin-bottom: 1rem;
+      font-size: 0.9375rem;
+    }
 
     /* Error */
     .error-banner {
@@ -326,6 +352,57 @@
     .detail-date { font-size: 0.85rem; color: #6c757d; margin-top: 0.25rem; }
 
     .section-divider { border: none; border-top: 1px solid #dee2e6; margin: 1.25rem 0; }
+
+    /* Detail meta (date / language / recording) */
+    .detail-meta {
+      display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem;
+      font-size: 0.875rem; color: #6c757d; margin-top: 0.35rem;
+    }
+    .detail-meta-item { display: flex; align-items: center; gap: 0.35rem; }
+    .recording-link {
+      color: #667eea; text-decoration: none;
+      display: flex; align-items: center; gap: 0.35rem;
+    }
+    .recording-link:hover { text-decoration: underline; }
+
+    /* Language badge */
+    .lang-badge {
+      display: inline-block; background: #f0f0f0; color: #495057;
+      border: 1px solid #dee2e6; border-radius: 4px;
+      padding: 0.1rem 0.5rem; font-size: 0.8rem;
+    }
+
+    /* Delete button */
+    .delete-btn {
+      background: none; border: 1px solid #f5c6cb; color: #dc3545;
+      border-radius: 6px; padding: 0.35rem 0.85rem;
+      font-size: 0.875rem; font-family: inherit; cursor: pointer;
+    }
+    .delete-btn:hover { background: #f8d7da; }
+
+    /* Full summary collapsible */
+    .full-summary {
+      margin-top: 1.25rem; border-top: 1px solid #dee2e6; padding-top: 1rem;
+    }
+    .full-summary summary {
+      font-size: 0.875rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      color: #6c757d; cursor: pointer; user-select: none;
+      list-style: none; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .full-summary summary::-webkit-details-marker { display: none; }
+    .full-summary summary::before { content: "▶"; font-size: 0.65rem; transition: transform 0.2s; }
+    .full-summary[open] summary::before { transform: rotate(90deg); }
+    .raw-notes {
+      margin: 0.75rem 0 0 0; padding: 1rem; background: #f8f9fa;
+      border-radius: 4px; font-size: 0.875rem; line-height: 1.6;
+      white-space: pre-wrap; word-break: break-word;
+      font-family: inherit; color: #495057;
+      max-height: 400px; overflow-y: auto;
+    }
+
+    /* Tag counter */
+    .tag-count { font-size: 0.8rem; color: #6c757d; margin-left: 0.5rem; }
 
     /* Similar meetings */
     .similar-btn {
@@ -436,8 +513,13 @@
       .sidebar-item-title { color: #f0f0f0; }
       .card { background: #2a2a2a; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
       .card h2 { color: #f0f0f0; }
-      .form-group input[type="text"] { background: #333; border-color: #555; color: #f0f0f0; }
+      .form-group input[type="text"],
+      .form-group input[type="date"],
+      .form-group input[type="url"] { background: #333; border-color: #555; color: #f0f0f0; }
       .form-group textarea { background: #333; border-color: #555; color: #f0f0f0; }
+      .cancel-btn { border-color: #555; color: #aaa; }
+      .cancel-btn:hover { background: #333; }
+      .success-banner { background: #0a2e1a; border-color: #1a5c35; color: #86efac; }
       .summary-text { background: #333; color: #f0f0f0; }
       .action-items li { background: #333; color: #f0f0f0; }
       .section-divider { border-color: #444; }
@@ -446,6 +528,12 @@
       .back-btn { border-color: #555; color: #ccc; }
       .back-btn:hover { background: #333; }
       .tag-add-form input { background: #333; border-color: #555; color: #f0f0f0; }
+      .lang-badge { background: #333; border-color: #555; color: #ccc; }
+      .delete-btn { border-color: #7f3a42; color: #f87171; }
+      .delete-btn:hover { background: #3a2020; }
+      .full-summary { border-top-color: #444; }
+      .full-summary summary { color: #aaa; }
+      .raw-notes { background: #2e2e2e; color: #ccc; }
       .similar-empty { color: #aaa; }
       .sim-card { border-color: #3a3a3a; }
       .sim-card-header { background: #2e2e2e; }
@@ -467,7 +555,7 @@
   <header class="app-header">
     <div class="header-inner">
       <h1>📚 Meeting Notes AI</h1>
-      <p class="app-subtitle">Paste your meeting notes and get an instant summary, action items, and tags</p>
+      <p class="app-subtitle">Paste your meeting notes and get an instant summary and tags</p>
       <div class="header-user">
         <span>{{ email }}</span>
         <a class="logout-btn" href="/auth/logout">Sign out</a>
@@ -494,7 +582,7 @@
       <!-- Analyze view -->
       <div id="view-analyze">
         <div class="card">
-          <h2>Analyze Meeting Notes</h2>
+          <h2>New Meeting</h2>
           <div class="error-banner" id="error"></div>
           <form id="form">
             <div class="form-group">
@@ -505,60 +593,64 @@
               <label for="notes">Meeting notes</label>
               <textarea id="notes" placeholder="Paste your meeting notes here..."></textarea>
             </div>
-            <button class="submit-btn" type="submit" id="submit-btn">Analyze</button>
+            <div class="form-group">
+              <label for="date">Meeting date</label>
+              <input id="date" type="date" />
+            </div>
+            <div class="form-group">
+              <label for="language">Language</label>
+              <input id="language" type="text" placeholder="e.g. English, Spanish" />
+            </div>
+            <div class="form-group">
+              <label for="recording-url">Recording URL</label>
+              <input id="recording-url" type="url" placeholder="https://..." />
+            </div>
+            <div class="form-actions">
+              <button class="submit-btn" type="submit" id="submit-btn">Save</button>
+              <button class="cancel-btn" type="button" id="cancel-btn">Cancel</button>
+            </div>
           </form>
-        </div>
-
-        <div class="card result-card" id="result-card">
-          <div class="result-section">
-            <h3>Summary</h3>
-            <p class="summary-text" id="result-summary"></p>
-          </div>
-          <hr class="section-divider" />
-          <div class="result-section">
-            <h3>Action Items</h3>
-            <ul class="action-items" id="result-actions"></ul>
-          </div>
-          <hr class="section-divider" />
-          <div class="result-section">
-            <h3>Tags</h3>
-            <div class="tags" id="result-tags"></div>
-          </div>
         </div>
       </div>
 
       <!-- Detail view -->
       <div id="view-detail" style="display:none;">
         <div class="card">
+          <div class="success-banner" id="success-banner" style="display:none;"></div>
           <div class="detail-header">
             <button class="back-btn" id="back-btn">← Back</button>
-            <div>
-              <h2 class="detail-title" id="detail-title"></h2>
-              <div class="detail-date" id="detail-date"></div>
-            </div>
+            <button class="delete-btn" id="delete-btn" type="button">Delete</button>
           </div>
 
+          <h2 class="detail-title" id="detail-title"></h2>
+          <div class="detail-meta" id="detail-meta"></div>
+
+          <hr class="section-divider" />
+
           <div class="result-section">
-            <h3>Tags</h3>
+            <h3>Tags <span class="tag-count" id="tag-count"></span></h3>
             <div class="tags" id="detail-tags"></div>
             <div class="tag-add-form" id="tag-add-form">
               <input type="text" id="tag-input" placeholder="add-tag" maxlength="60" />
               <button class="tag-add-btn" id="tag-add-btn" type="button">Add</button>
             </div>
             <div class="tag-error" id="tag-error"></div>
-            <button class="similar-btn" id="similar-btn" type="button">Find similar meetings</button>
-            <div class="similar-results" id="similar-results" style="display:none;"></div>
           </div>
+
           <hr class="section-divider" />
+
           <div class="result-section">
             <h3>Summary</h3>
             <p class="summary-text" id="detail-summary"></p>
           </div>
-          <hr class="section-divider" />
-          <div class="result-section">
-            <h3>Action Items</h3>
-            <ul class="action-items" id="detail-actions"></ul>
-          </div>
+
+          <button class="similar-btn" id="similar-btn" type="button">Show related meetings</button>
+          <div class="similar-results" id="similar-results" style="display:none;"></div>
+
+          <details class="full-summary">
+            <summary>Full Notes</summary>
+            <pre class="raw-notes" id="detail-notes-raw"></pre>
+          </details>
         </div>
       </div>
 
@@ -601,7 +693,6 @@
     const form        = document.getElementById('form');
     const submitBtn   = document.getElementById('submit-btn');
     const errorBanner = document.getElementById('error');
-    const resultCard  = document.getElementById('result-card');
     const tagInput    = document.getElementById('tag-input');
     const tagError    = document.getElementById('tag-error');
 
@@ -637,14 +728,16 @@
       currentMeetingId = null;
       document.getElementById('title').value = '';
       document.getElementById('notes').value = '';
+      document.getElementById('date').value = '';
+      document.getElementById('language').value = '';
+      document.getElementById('recording-url').value = '';
       errorBanner.classList.remove('visible');
-      resultCard.classList.remove('visible');
       viewAnalyze.style.display = '';
       viewDetail.style.display  = 'none';
       setSidebarActive(null);
     }
 
-    async function openMeeting(id) {
+    async function openMeeting(id, successMessage = null) {
       const res = await fetch(`/meetings/${id}`);
       if (!res.ok) return;
       const m = await res.json();
@@ -653,31 +746,39 @@
       viewAnalyze.style.display = 'none';
       viewDetail.style.display  = '';
       setSidebarActive(id);
+      if (successMessage) {
+        const banner = document.getElementById('success-banner');
+        banner.textContent = successMessage;
+        banner.style.display = '';
+        setTimeout(() => { banner.style.display = 'none'; }, 5000);
+      }
     }
 
     function renderDetail(m) {
       currentMeetingId = m.id;
       document.getElementById('detail-title').textContent = m.title;
-      document.getElementById('detail-date').textContent  =
-        new Date(m.created_at).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
       document.getElementById('detail-summary').textContent = m.summary || '—';
+      document.getElementById('detail-notes-raw').textContent = m.notes_raw || '';
 
-      const actions = document.getElementById('detail-actions');
-      actions.innerHTML = '';
-      (m.action_items || []).forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = item;
-        actions.appendChild(li);
-      });
-      if (!m.action_items?.length) actions.innerHTML = '<li>No action items.</li>';
+      // Meta row: saved date, meeting date, language, recording URL
+      const meta = document.getElementById('detail-meta');
+      meta.innerHTML = '';
+      const savedDate = new Date(m.created_at).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+      meta.innerHTML += `<span class="detail-meta-item">${esc(savedDate)}</span>`;
+      if (m.date) meta.innerHTML += `<span class="detail-meta-item">📅 ${esc(m.date)}</span>`;
+      if (m.language) meta.innerHTML += `<span class="detail-meta-item"><span class="lang-badge">${esc(m.language)}</span></span>`;
+      if (m.recording_url) {
+        meta.innerHTML += `<a class="recording-link" href="${esc(m.recording_url)}" target="_blank" rel="noopener">🎥 Recording</a>`;
+      }
 
       renderDetailTags(m.tags || [], m.id);
 
-      // Show/hide add-tag form (max 10)
-      document.getElementById('tag-add-form').style.display =
-        m.tags.length >= 10 ? 'none' : 'flex';
-      tagError.textContent = '';
+      const atLimit = (m.tags || []).length >= 10;
+      document.getElementById('tag-add-form').style.display = atLimit ? 'none' : 'flex';
+      document.getElementById('tag-count').textContent = `${(m.tags || []).length}/10`;
+      tagError.textContent = atLimit ? 'Tag limit reached' : '';
       tagInput.value = '';
+
       const sr = document.getElementById('similar-results');
       sr.style.display = 'none';
       sr.innerHTML = '';
@@ -702,6 +803,15 @@
     document.getElementById('new-btn').addEventListener('click', showAnalyzeView);
     document.getElementById('back-btn').addEventListener('click', showAnalyzeView);
 
+    document.getElementById('cancel-btn').addEventListener('click', () => {
+      document.getElementById('title').value = '';
+      document.getElementById('notes').value = '';
+      document.getElementById('date').value = '';
+      document.getElementById('language').value = '';
+      document.getElementById('recording-url').value = '';
+      errorBanner.classList.remove('visible');
+    });
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const title = document.getElementById('title').value.trim();
@@ -714,60 +824,37 @@
         errorBanner.classList.add('visible');
         return;
       }
+      const date         = document.getElementById('date').value || null;
+      const language     = document.getElementById('language').value.trim() || null;
+      const recordingUrl = document.getElementById('recording-url').value.trim() || null;
 
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Analyzing…';
+      submitBtn.textContent = 'Saving…';
       errorBanner.classList.remove('visible');
-      resultCard.classList.remove('visible');
 
       try {
         const res = await fetch('/analyze', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, notes }),
+          body: JSON.stringify({ title, notes, date, language, recording_url: recordingUrl }),
         });
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
           throw new Error(err.detail || `Server error: ${res.status}`);
         }
         const data = await res.json();
-        renderAnalyzeResult(data);
         await loadSidebar();
+        if (data.id) {
+          await openMeeting(data.id, 'Meeting saved successfully.');
+        }
       } catch (err) {
         errorBanner.textContent = err.message || 'Something went wrong. Please try again.';
         errorBanner.classList.add('visible');
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Analyze';
+        submitBtn.textContent = 'Save';
       }
     });
-
-    function renderAnalyzeResult(data) {
-      document.getElementById('result-summary').textContent = data.summary || '—';
-
-      const actions = document.getElementById('result-actions');
-      actions.innerHTML = '';
-      const items = Array.isArray(data.action_items) ? data.action_items : [];
-      if (!items.length) { actions.innerHTML = '<li>No action items found.</li>'; }
-      else items.forEach(item => { const li = document.createElement('li'); li.textContent = item; actions.appendChild(li); });
-
-      const tagsDiv = document.getElementById('result-tags');
-      tagsDiv.innerHTML = '';
-      const tags = Array.isArray(data.tags) ? data.tags : [];
-      if (!tags.length) { tagsDiv.textContent = 'No tags.'; }
-      else tags.forEach(name => {
-        const p = tagPalette(name);
-        const span = document.createElement('span');
-        span.className = 'tag';
-        span.style.background = p.bg;
-        span.style.color = p.color;
-        span.textContent = name;
-        tagsDiv.appendChild(span);
-      });
-
-      resultCard.classList.add('visible');
-      resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
 
     // ── Tag add/remove ───────────────────────────────────────────────────────
     const TAG_RE = /^[a-z0-9][a-z0-9-]*$/;
@@ -799,6 +886,16 @@
       renderDetail(data);
     }
 
+    // ── Delete meeting ───────────────────────────────────────────────────────
+    document.getElementById('delete-btn').addEventListener('click', async () => {
+      if (!currentMeetingId) return;
+      if (!confirm('Delete this meeting? This cannot be undone.')) return;
+      const res = await fetch(`/meetings/${currentMeetingId}`, { method: 'DELETE' });
+      if (!res.ok) return;
+      await loadSidebar();
+      showAnalyzeView();
+    });
+
     // ── Similar meetings ─────────────────────────────────────────────────────
     document.getElementById('similar-btn').addEventListener('click', async () => {
       const btn = document.getElementById('similar-btn');
@@ -824,7 +921,7 @@
         container.innerHTML = '<div class="similar-empty">Could not load similar meetings.</div>';
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Find similar meetings';
+        btn.textContent = 'Show related meetings';
       }
     });
 
