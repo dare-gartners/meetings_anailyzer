@@ -11,8 +11,8 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from models import NotesRequest, NotesResponse
-from llm_client import analyze_notes
-from database import init_db, SessionLocal, Meeting, Chunk
+from llm_client import analyze_notes, generate_tags
+from database import init_db, SessionLocal, Meeting, Chunk, Tag, MeetingTag
 from chunking import chunk_text
 
 logger = logging.getLogger(__name__)
@@ -83,9 +83,39 @@ def analyze(body: NotesRequest, request: Request):
         )
         db.add(meeting)
         db.flush()
-        for idx, chunk in enumerate(chunk_text(body.notes)):
-            db.add(Chunk(meeting_id=meeting.id, chunk_index=idx, text=chunk))
+
+        chunks = chunk_text(body.notes)
+        saved_chunks = []
+        for idx, chunk in enumerate(chunks):
+            c = Chunk(meeting_id=meeting.id, chunk_index=idx, text=chunk)
+            db.add(c)
+            saved_chunks.append(chunk)
         db.commit()
+
+        # Tag generation — failures are isolated per chunk
+        existing_tags = [row.name for row in db.query(Tag.name).all()]
+        linked_tag_ids: set[int] = set()
+
+        for chunk in saved_chunks:
+            try:
+                tag_names = generate_tags(chunk, existing_tags)
+            except Exception as e:
+                logger.error("Tag generation failed for chunk: %s", e)
+                continue
+
+            for name in tag_names:
+                tag = db.query(Tag).filter(Tag.name == name).first()
+                if not tag:
+                    tag = Tag(name=name)
+                    db.add(tag)
+                    db.flush()
+                    existing_tags.append(name)
+                if tag.id not in linked_tag_ids:
+                    db.add(MeetingTag(meeting_id=meeting.id, tag_id=tag.id))
+                    linked_tag_ids.add(tag.id)
+
+        db.commit()
+        data["tags"] = [db.query(Tag).filter(Tag.id == tid).first().name for tid in linked_tag_ids]
     except Exception as e:
         logger.error("DB save failed: %s", e)
     finally:

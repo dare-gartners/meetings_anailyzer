@@ -118,9 +118,24 @@ Add a login page (e.g. `pages/login.html`) served at `/login`. It should show a 
 - SQLite via SQLAlchemy, stored in `meetings.db`
 - `meetings` table: `id`, `title`, `notes_raw`, `summary`, `action_items` (JSON string)
 - `chunks` table: `id`, `meeting_id` (FK → meetings, cascade delete), `chunk_index`, `text`
+- `tags` table: `id`, `name` (unique across the whole table)
+- `meeting_tags` table: `id`, `meeting_id` (FK → meetings, cascade delete), `tag_id` (FK → tags, cascade delete), unique on `(meeting_id, tag_id)`
 - DB is initialized at app startup via `init_db()`
 - After each successful `/analyze` call, the meeting and its chunks are saved
+- After chunks are saved, tags are generated per chunk and linked to the meeting (deduplicated)
 - DB save failures are logged but never surface to the caller — `/analyze` always returns the LLM result
+
+## Tag Rules
+- Lowercase only
+- Single words strongly preferred (e.g. `roadmap`, `budget`, `hiring`)
+- Hyphenated compound only when a single word is too vague (e.g. `ai-adoption`)
+- No spaces, no special characters
+- Each tag must match: `^[a-z0-9][a-z0-9-]*$`
+- Up to 3 tags generated per chunk using `generate_tags()` in `llm_client.py`
+- Existing tags are passed to the model to encourage reuse over near-synonyms
+- If a tag already exists in the `tags` table, reuse it; otherwise insert
+- Tags are linked to the meeting via `meeting_tags`, deduplicated across chunks
+- If tag generation fails for any chunk, log and continue — do not fail the request
 
 ## Chunking (Teams AI format)
 - Topic header: a line with NO leading whitespace that ends with `:`
