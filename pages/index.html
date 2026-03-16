@@ -392,10 +392,10 @@
       letter-spacing: 0.04em; color: #6c757d; border-bottom: 2px solid #dee2e6;
     }
     .sim-table td { padding: 0.75rem; vertical-align: top; border-bottom: 1px solid #f0f0f0; line-height: 1.45; }
-    .sim-table .col-your { width: 42%; background: #e7f1ff; }
-    .sim-table .col-match { width: 42%; }
-    .sim-table .col-score { width: 7%; text-align: center; color: #28a745; font-weight: 600; white-space: nowrap; }
-    .sim-table .col-why { width: 9%; text-align: center; }
+    .sim-table .col-your { background: #e7f1ff; }
+    .sim-table .col-match { }
+    .sim-table .col-score { text-align: center; color: #28a745; font-weight: 600; white-space: nowrap; }
+    .sim-table .col-why { text-align: center; }
     .sim-table tr.best-row td { border-top: 2px solid #28a745; border-bottom: 2px solid #28a745; }
     .sim-table tr.best-row td:first-child { border-left: 2px solid #28a745; }
     .sim-table tr.best-row td:last-child { border-right: 2px solid #28a745; }
@@ -635,6 +635,10 @@
     // ── Views ────────────────────────────────────────────────────────────────
     function showAnalyzeView() {
       currentMeetingId = null;
+      document.getElementById('title').value = '';
+      document.getElementById('notes').value = '';
+      errorBanner.classList.remove('visible');
+      resultCard.classList.remove('visible');
       viewAnalyze.style.display = '';
       viewDetail.style.display  = 'none';
       setSidebarActive(null);
@@ -932,6 +936,12 @@
         ? `<tr class="more-row"><td colspan="4"><span class="sim-more-link">+ ${extra} more matching topic${extra > 1 ? 's' : ''}</span></td></tr>`
         : '';
       return `<table class="sim-table">
+        <colgroup>
+          <col>
+          <col>
+          <col style="width:52px">
+          <col style="width:72px">
+        </colgroup>
         <thead><tr>
           <th>This meeting</th>
           <th>${esc(m.title)}</th>

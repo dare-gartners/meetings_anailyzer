@@ -17,7 +17,8 @@ Do not overengineer it.
 - Simple HTML frontend
 
 ## Architecture
-Use one LLM call per request unless explicitly needed.
+- Use one LLM call per request unless explicitly needed.
+- Where multiple independent LLM/embedding calls are needed, run them in parallel using `asyncio.gather` + `loop.run_in_executor`. Both `/analyze` and `/meetings/{id}/similar` follow this pattern.
 
 ## LLM Provider
 - Use **Azure OpenAI** via the `openai` Python SDK (`AzureOpenAI` client)
@@ -125,9 +126,9 @@ Add a login page (e.g. `pages/login.html`) served at `/login`. It should show a 
 - `meeting_tags` table: `id`, `meeting_id` (FK → meetings, cascade delete), `tag_id` (FK → tags, cascade delete), unique on `(meeting_id, tag_id)`
 - DB is initialized at app startup via `init_db()`
 - After each successful `/analyze` call, the meeting and its chunks are saved
-- After chunks are saved, for each chunk: a description is generated via LLM, then an embedding is generated from that description and stored as a BLOB
-- After chunks are saved, tags are generated per chunk and linked to the meeting (deduplicated)
-- Description and embedding failures are isolated per chunk — logged but never fail the request
+- After chunks are saved, all descriptions are generated in parallel (`asyncio.gather`), then all embeddings in parallel, then all tags in parallel — three sequential parallel batches
+- Tag generation passes a snapshot of existing tags to all chunks simultaneously (parallel calls don't see each other's newly created tags, but do see all pre-existing ones)
+- Description, embedding, and tag failures are isolated per chunk — logged but never fail the request
 - New columns are added to existing tables via `ALTER TABLE` in `init_db()` if absent — do not drop or recreate tables
 - DB save failures are logged but never surface to the caller — `/analyze` always returns the LLM result
 
