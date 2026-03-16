@@ -27,14 +27,16 @@ def analyze_notes(notes: str, title: str = "") -> str:
 
 def generate_description(chunk: str) -> str:
     prompt = (
-        "Summarize the following topic from a meeting in 1-2 sentences. "
-        "Focus on the topic discussed, not the people involved. Do not start with 'This meeting'.\n\n"
+        "In up to 3 sentences, describe the specific problem or decision addressed in this topic. "
+        "Focus on what is being solved or decided, not the product area or domain it belongs to. "
+        "Do not start with 'This meeting', 'This topic', 'The team', or any similar preamble — "
+        "start directly with the subject matter. Avoid product names unless essential to the meaning.\n\n"
         f"{chunk}"
     )
     response = _client().chat.completions.create(
         model=os.environ["AZURE_OPENAI_DEPLOYMENT"],
         messages=[{"role": "user", "content": prompt}],
-        max_tokens=128,
+        max_tokens=192,
     )
     return response.choices[0].message.content.strip()
 

@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 from dotenv import load_dotenv
@@ -66,10 +67,12 @@ def index(request: Request):
 # --- API ---
 
 @app.post("/analyze", response_model=NotesResponse)
-def analyze(body: NotesRequest, request: Request):
+async def analyze(body: NotesRequest, request: Request):
     if not auth.require_auth(request):
         raise HTTPException(status_code=401, detail="Not authenticated")
-    raw = analyze_notes(body.notes, body.title)
+
+    loop = asyncio.get_event_loop()
+    raw = await loop.run_in_executor(None, analyze_notes, body.notes, body.title)
     try:
         data = json.loads(raw)
     except json.JSONDecodeError:
@@ -87,50 +90,58 @@ def analyze(body: NotesRequest, request: Request):
         db.flush()
 
         chunks = chunk_text(body.notes)
-        saved_chunks = []
         chunk_rows = []
         for idx, chunk in enumerate(chunks):
             c = Chunk(meeting_id=meeting.id, chunk_index=idx, text=chunk)
             db.add(c)
-            saved_chunks.append(chunk)
             chunk_rows.append(c)
         db.commit()
 
-        # Description + embedding — failures are isolated per chunk
-        for c, chunk_text_val in zip(chunk_rows, saved_chunks):
-            description = None
+        # All descriptions in parallel
+        async def _describe(c):
             try:
-                description = generate_description(chunk_text_val)
-                c.description = description
+                return await loop.run_in_executor(None, generate_description, c.text)
             except Exception as e:
                 logger.error("Description generation failed for chunk %s: %s", c.id, e)
+                return None
 
-            if description:
-                try:
-                    c.embedding = generate_embedding(description)
-                except Exception as e:
-                    logger.error("Embedding generation failed for chunk %s: %s", c.id, e)
+        descriptions = await asyncio.gather(*[_describe(c) for c in chunk_rows])
 
+        for c, desc in zip(chunk_rows, descriptions):
+            c.description = desc
+
+        # All embeddings in parallel (only for chunks that got a description)
+        async def _embed(c):
+            if not c.description:
+                return
+            try:
+                c.embedding = await loop.run_in_executor(None, generate_embedding, c.description)
+            except Exception as e:
+                logger.error("Embedding generation failed for chunk %s: %s", c.id, e)
+
+        await asyncio.gather(*[_embed(c) for c in chunk_rows])
         db.commit()
 
-        # Tag generation — failures are isolated per chunk
+        # All tag generation in parallel
         existing_tags = [row.name for row in db.query(Tag.name).all()]
-        linked_tag_ids: set[int] = set()
 
-        for chunk in saved_chunks:
+        async def _tags(c):
             try:
-                tag_names = generate_tags(chunk, existing_tags)
+                return await loop.run_in_executor(None, generate_tags, c.text, list(existing_tags))
             except Exception as e:
-                logger.error("Tag generation failed for chunk: %s", e)
-                continue
+                logger.error("Tag generation failed for chunk %s: %s", c.id, e)
+                return []
 
+        all_tag_names = await asyncio.gather(*[_tags(c) for c in chunk_rows])
+
+        linked_tag_ids: set[int] = set()
+        for tag_names in all_tag_names:
             for name in tag_names:
                 tag = db.query(Tag).filter(Tag.name == name).first()
                 if not tag:
                     tag = Tag(name=name)
                     db.add(tag)
                     db.flush()
-                    existing_tags.append(name)
                 if tag.id not in linked_tag_ids:
                     db.add(MeetingTag(meeting_id=meeting.id, tag_id=tag.id))
                     linked_tag_ids.add(tag.id)
@@ -260,7 +271,7 @@ def _cosine(a: np.ndarray, b: np.ndarray) -> float:
 
 
 @app.post("/meetings/{meeting_id}/similar", response_model=list[SimilarMeeting])
-def find_similar(meeting_id: int, request: Request):
+async def find_similar(meeting_id: int, request: Request):
     if not auth.require_auth(request):
         raise HTTPException(status_code=401, detail="Not authenticated")
     db = SessionLocal()
@@ -294,18 +305,26 @@ def find_similar(meeting_id: int, request: Request):
             if existing is None or top_score > existing[0]:
                 best_per_source[key] = (top_score, chunk.text, chunk.description, best_source_text, best_source_desc)
 
-        # LLM re-ranking: verify each candidate is genuinely about the same subject
-        all_matches: dict[int, list[tuple[float, str, str | None, str, str | None]]] = {}
-        for (mid, _src_id), entry in best_per_source.items():
+        # LLM re-ranking: verify all candidates in parallel
+        loop = asyncio.get_event_loop()
+        candidates = list(best_per_source.items())
+
+        async def _verify(key, entry):
             s, matched_text, matched_desc, src_text, src_desc = entry
             a = src_desc or src_text.split('\n')[0].strip()
             b = matched_desc or matched_text.split('\n')[0].strip()
             try:
-                if not verify_match(a, b):
-                    continue
+                return key, entry, await loop.run_in_executor(None, verify_match, a, b)
             except Exception as e:
-                logger.error("verify_match failed: %s", e)  # fail open
-            all_matches.setdefault(mid, []).append(entry)
+                logger.error("verify_match failed: %s", e)
+                return key, entry, True  # fail open
+
+        verified = await asyncio.gather(*[_verify(k, v) for k, v in candidates])
+
+        all_matches: dict[int, list[tuple[float, str, str | None, str, str | None]]] = {}
+        for (mid, _src_id), entry, passed in verified:
+            if passed:
+                all_matches.setdefault(mid, []).append(entry)
 
         if not all_matches:
             return []
