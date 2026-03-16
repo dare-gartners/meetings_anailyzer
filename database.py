@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, Text, ForeignKey, UniqueConstraint, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, Text, ForeignKey, UniqueConstraint, DateTime, LargeBinary
 from sqlalchemy.orm import declarative_base, sessionmaker
 from datetime import datetime, timezone
 
@@ -27,6 +27,8 @@ class Chunk(Base):
     meeting_id = Column(Integer, ForeignKey("meetings.id", ondelete="CASCADE"), nullable=False)
     chunk_index = Column(Integer, nullable=False)
     text = Column(Text, nullable=False)
+    description = Column(Text, nullable=True)
+    embedding = Column(LargeBinary, nullable=True)
 
 
 class Tag(Base):
@@ -48,3 +50,11 @@ class MeetingTag(Base):
 
 def init_db():
     Base.metadata.create_all(bind=engine)
+    # Migrate existing chunks table — add columns if absent
+    with engine.connect() as conn:
+        existing = {row[1] for row in conn.execute(__import__("sqlalchemy").text("PRAGMA table_info(chunks)"))}
+        if "description" not in existing:
+            conn.execute(__import__("sqlalchemy").text("ALTER TABLE chunks ADD COLUMN description TEXT"))
+        if "embedding" not in existing:
+            conn.execute(__import__("sqlalchemy").text("ALTER TABLE chunks ADD COLUMN embedding BLOB"))
+        conn.commit()

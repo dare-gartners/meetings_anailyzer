@@ -22,3 +22,6 @@ python-dotenv
 
 # Persistence
 sqlalchemy
+
+# Embeddings
+numpy
