@@ -28,13 +28,45 @@ def analyze_notes(notes: str, title: str = "") -> str:
 def generate_description(chunk: str) -> str:
     prompt = (
         "Summarize the following topic from a meeting in 1-2 sentences. "
-        "Focus on what was discussed or decided. Do not start with 'This meeting'.\n\n"
+        "Focus on the topic discussed, not the people involved. Do not start with 'This meeting'.\n\n"
         f"{chunk}"
     )
     response = _client().chat.completions.create(
         model=os.environ["AZURE_OPENAI_DEPLOYMENT"],
         messages=[{"role": "user", "content": prompt}],
         max_tokens=128,
+    )
+    return response.choices[0].message.content.strip()
+
+
+def verify_match(desc_a: str, desc_b: str) -> bool:
+    prompt = (
+        "Two meeting topics were flagged as semantically similar by an embedding model. "
+        "Your job is to decide whether they genuinely discuss the same subject matter — "
+        "not merely the same product, team, or domain.\n\n"
+        f"Topic A: {desc_a}\n\n"
+        f"Topic B: {desc_b}\n\n"
+        "Do these two topics discuss the same subject? Answer with only 'yes' or 'no'."
+    )
+    response = _client().chat.completions.create(
+        model=os.environ["AZURE_OPENAI_DEPLOYMENT"],
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=5,
+    )
+    return response.choices[0].message.content.strip().lower().startswith("yes")
+
+
+def explain_match(source_chunk: str, matched_chunk: str) -> str:
+    prompt = (
+        "Two meeting topics were found to be semantically similar. "
+        "In 1-2 sentences, describe what subject matter they had in common. "
+        "Start with 'Both meetings discussed...' and focus on the shared topic, not on specific people or names.\n\n"
+        f"Topic A:\n{source_chunk}\n\nTopic B:\n{matched_chunk}"
+    )
+    response = _client().chat.completions.create(
+        model=os.environ["AZURE_OPENAI_DEPLOYMENT"],
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=100,
     )
     return response.choices[0].message.content.strip()
 

@@ -327,6 +327,91 @@
 
     .section-divider { border: none; border-top: 1px solid #dee2e6; margin: 1.25rem 0; }
 
+    /* Similar meetings */
+    .similar-btn {
+      background: none; border: 1px solid #667eea; color: #667eea;
+      border-radius: 6px; padding: 0.45rem 1rem;
+      font-size: 0.875rem; font-family: inherit; cursor: pointer;
+      margin-top: 1rem; transition: background 0.15s, color 0.15s;
+    }
+    .similar-btn:hover:not(:disabled) { background: #667eea; color: white; }
+    .similar-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .similar-results { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .similar-empty { font-size: 0.875rem; color: #6c757d; margin-top: 0.75rem; }
+
+    .sim-card { border: 1px solid #dee2e6; border-radius: 8px; overflow: hidden; }
+
+    .sim-card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #f8f9fa; padding: 0.75rem 1rem; cursor: pointer;
+      gap: 1rem;
+    }
+    .sim-card-header:hover { background: #f0f0f0; }
+
+    .sim-card-header-left { min-width: 0; }
+    .sim-card-header-title { font-weight: 600; font-size: 0.9375rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sim-card-header-date { font-size: 0.78rem; color: #6c757d; margin-top: 0.1rem; }
+
+    .sim-card-header-right { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+    .sim-badge {
+      background: #28a745; color: white; font-size: 0.78rem; font-weight: 600;
+      padding: 0.2rem 0.55rem; border-radius: 9999px; white-space: nowrap;
+    }
+    .sim-expand-btn {
+      background: none; border: 1px solid #dee2e6; color: #495057;
+      border-radius: 4px; width: 1.6rem; height: 1.6rem; font-size: 1rem;
+      cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center;
+    }
+    .sim-expand-btn:hover { background: #e9ecef; }
+
+    .sim-card-body { padding: 0.9rem 1rem; }
+
+    .sim-chunk {
+      font-size: 0.875rem; color: #495057; background: #f8f9fa;
+      border-left: 3px solid #667eea; padding: 0.5rem 0.75rem;
+      border-radius: 4px; white-space: pre-wrap; word-break: break-word;
+    }
+    .sim-your-chunk {
+      font-size: 0.875rem; color: #0d47a1; background: #e7f1ff;
+      border-left: 3px solid #667eea; padding: 0.5rem 0.75rem;
+      border-radius: 4px; margin-top: 0.6rem; white-space: pre-wrap; word-break: break-word;
+    }
+    .sim-your-label { font-size: 0.75rem; font-weight: 600; color: #6c757d; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.3rem; }
+    .sim-more-link {
+      font-size: 0.8rem; color: #667eea; cursor: pointer;
+      margin-top: 0.6rem; display: inline-block; text-decoration: underline;
+    }
+
+    /* Similarity table */
+    .sim-table-wrap { overflow-x: auto; }
+    .sim-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; table-layout: fixed; }
+    .sim-table th {
+      background: #f8f9fa; padding: 0.5rem 0.75rem; text-align: left;
+      font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.04em; color: #6c757d; border-bottom: 2px solid #dee2e6;
+    }
+    .sim-table td { padding: 0.75rem; vertical-align: top; border-bottom: 1px solid #f0f0f0; line-height: 1.45; }
+    .sim-table .col-your { width: 42%; background: #e7f1ff; }
+    .sim-table .col-match { width: 42%; }
+    .sim-table .col-score { width: 7%; text-align: center; color: #28a745; font-weight: 600; white-space: nowrap; }
+    .sim-table .col-why { width: 9%; text-align: center; }
+    .sim-table tr.best-row td { border-top: 2px solid #28a745; border-bottom: 2px solid #28a745; }
+    .sim-table tr.best-row td:first-child { border-left: 2px solid #28a745; }
+    .sim-table tr.best-row td:last-child { border-right: 2px solid #28a745; }
+
+    .why-btn {
+      background: #007bff; color: white; border: none; border-radius: 4px;
+      padding: 0.25rem 0.5rem; font-size: 0.78rem; font-family: inherit; cursor: pointer;
+    }
+    .why-btn:hover { opacity: 0.85; }
+    .why-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .explain-row td {
+      background: #fff3cd; border-left: 4px solid #ffc107;
+      padding: 0.6rem 0.75rem; font-size: 0.85rem; color: #495057; line-height: 1.5;
+    }
+
     /* Footer */
     .app-footer {
       text-align: center; padding: 1.25rem;
@@ -361,6 +446,19 @@
       .back-btn { border-color: #555; color: #ccc; }
       .back-btn:hover { background: #333; }
       .tag-add-form input { background: #333; border-color: #555; color: #f0f0f0; }
+      .similar-empty { color: #aaa; }
+      .sim-card { border-color: #3a3a3a; }
+      .sim-card-header { background: #2e2e2e; }
+      .sim-card-header:hover { background: #383838; }
+      .sim-card-header-date { color: #aaa; }
+      .sim-expand-btn { border-color: #555; color: #ccc; }
+      .sim-expand-btn:hover { background: #444; }
+      .sim-chunk { background: #333; color: #ccc; }
+      .sim-your-chunk { background: #1a2a44; color: #90caf9; }
+      .sim-table th { background: #2e2e2e; color: #aaa; border-color: #444; }
+      .sim-table td { border-color: #3a3a3a; }
+      .sim-table .col-your { background: #1a2a44; }
+      .explain-row td { background: #2a2200; border-left-color: #ffc107; color: #ccc; }
     }
   </style>
 </head>
@@ -448,6 +546,8 @@
               <button class="tag-add-btn" id="tag-add-btn" type="button">Add</button>
             </div>
             <div class="tag-error" id="tag-error"></div>
+            <button class="similar-btn" id="similar-btn" type="button">Find similar meetings</button>
+            <div class="similar-results" id="similar-results" style="display:none;"></div>
           </div>
           <hr class="section-divider" />
           <div class="result-section">
@@ -574,6 +674,9 @@
         m.tags.length >= 10 ? 'none' : 'flex';
       tagError.textContent = '';
       tagInput.value = '';
+      const sr = document.getElementById('similar-results');
+      sr.style.display = 'none';
+      sr.innerHTML = '';
     }
 
     function renderDetailTags(tags, meetingId) {
@@ -690,6 +793,153 @@
       if (!res.ok) return;
       const data = await res.json();
       renderDetail(data);
+    }
+
+    // ── Similar meetings ─────────────────────────────────────────────────────
+    document.getElementById('similar-btn').addEventListener('click', async () => {
+      const btn = document.getElementById('similar-btn');
+      const container = document.getElementById('similar-results');
+      btn.disabled = true;
+      btn.textContent = 'Searching…';
+      container.style.display = 'none';
+      container.innerHTML = '';
+
+      try {
+        const res = await fetch(`/meetings/${currentMeetingId}/similar`, { method: 'POST' });
+        if (!res.ok) throw new Error('Request failed');
+        const results = await res.json();
+        container.style.display = 'flex';
+
+        if (results.length === 0) {
+          container.innerHTML = '<div class="similar-empty">No similar meetings found.</div>';
+        } else {
+          results.forEach(m => buildSimCard(m, container));
+        }
+      } catch {
+        container.style.display = 'flex';
+        container.innerHTML = '<div class="similar-empty">Could not load similar meetings.</div>';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Find similar meetings';
+      }
+    });
+
+    function firstLine(text) {
+      return (text || '').split('\n')[0].trim();
+    }
+
+    function buildSimCard(m, container) {
+      const matches = m.all_matches.slice(0, 3);
+      const date = new Date(m.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+      const pct = Math.round(m.score * 100);
+
+      const card = document.createElement('div');
+      card.className = 'sim-card';
+
+      // Header
+      const header = document.createElement('div');
+      header.className = 'sim-card-header';
+      header.innerHTML = `
+        <div class="sim-card-header-left">
+          <div class="sim-card-header-title">${esc(m.title)}</div>
+          <div class="sim-card-header-date">${date}</div>
+        </div>
+        <div class="sim-card-header-right">
+          <span class="sim-badge">${pct}% similar</span>
+          <button class="sim-expand-btn" type="button" title="Expand">+</button>
+        </div>`;
+      header.querySelector('.sim-card-header-title').style.cursor = 'pointer';
+      header.querySelector('.sim-card-header-title').addEventListener('click', (e) => { e.stopPropagation(); openMeeting(m.id); });
+
+      // Table — always rendered; rows beyond first are hidden until expanded
+      const tableWrap = document.createElement('div');
+      tableWrap.className = 'sim-table-wrap';
+      tableWrap.innerHTML = buildSimTable(m);
+
+      // Wire Why? buttons
+      tableWrap.querySelectorAll('.why-btn').forEach((whyBtn, idx) => {
+        whyBtn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const match = matches[idx];
+          const existingRow = tableWrap.querySelector(`[data-explain-row="${idx}"]`);
+          if (existingRow) { existingRow.remove(); whyBtn.textContent = 'Why?'; return; }
+          whyBtn.disabled = true;
+          whyBtn.textContent = '…';
+          try {
+            const res = await fetch('/matches/explain', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                source_chunk: match.source_description || match.source_chunk,
+                matched_chunk: match.matched_description || match.matched_chunk,
+              }),
+            });
+            const data = await res.json();
+            const tr = tableWrap.querySelector(`[data-row="${idx}"]`);
+            const explainTr = document.createElement('tr');
+            explainTr.className = 'explain-row';
+            explainTr.dataset.explainRow = idx;
+            const text = data.explanation || data.detail || 'Could not generate explanation.';
+            explainTr.innerHTML = `<td colspan="4">${esc(text)}</td>`;
+            tr.insertAdjacentElement('afterend', explainTr);
+            whyBtn.textContent = 'Hide';
+          } catch (err) {
+            whyBtn.textContent = 'Error';
+            setTimeout(() => { whyBtn.textContent = 'Why?'; }, 2000);
+          } finally {
+            whyBtn.disabled = false;
+          }
+        });
+      });
+
+      // Toggle: show/hide extra rows and the "more" footer row
+      let expanded = false;
+      const expandBtn = header.querySelector('.sim-expand-btn');
+      function toggleExpand(e) {
+        if (e) e.stopPropagation();
+        expanded = !expanded;
+        tableWrap.querySelectorAll('tr[data-row]').forEach((tr, i) => {
+          if (i > 0) tr.style.display = expanded ? '' : 'none';
+        });
+        const moreRow = tableWrap.querySelector('.more-row');
+        if (moreRow) moreRow.style.display = expanded ? 'none' : '';
+        expandBtn.textContent = expanded ? '−' : '+';
+      }
+      expandBtn.addEventListener('click', toggleExpand);
+      tableWrap.querySelector('.sim-more-link')?.addEventListener('click', (e) => { e.stopPropagation(); toggleExpand(null); });
+
+      card.appendChild(header);
+      card.appendChild(tableWrap);
+      container.appendChild(card);
+    }
+
+    function buildSimTable(m) {
+      const allMatches = m.all_matches.slice(0, 3);
+      const extra = allMatches.length - 1;
+      const rows = allMatches.map((match, idx) => {
+        const pct = Math.round(match.score * 100);
+        const srcLabel = match.source_description || firstLine(match.source_chunk);
+        const matchLabel = match.matched_description || firstLine(match.matched_chunk);
+        const hidden = idx > 0 ? ' style="display:none"' : '';
+        return `<tr class="${match.is_best ? 'best-row' : ''}" data-row="${idx}"${hidden}>
+          <td class="col-your">${esc(srcLabel)}</td>
+          <td class="col-match">${esc(matchLabel)}</td>
+          <td class="col-score">${pct}%</td>
+          <td class="col-why"><button class="why-btn" type="button">Why?</button></td>
+        </tr>`;
+      }).join('');
+      const moreRow = extra > 0
+        ? `<tr class="more-row"><td colspan="4"><span class="sim-more-link">+ ${extra} more matching topic${extra > 1 ? 's' : ''}</span></td></tr>`
+        : '';
+      return `<table class="sim-table">
+        <thead><tr>
+          <th>This meeting</th>
+          <th>${esc(m.title)}</th>
+          <th>Match</th>
+          <th></th>
+        </tr></thead>
+        <tbody>${rows}${moreRow}</tbody>
+      </table>`;
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────────
