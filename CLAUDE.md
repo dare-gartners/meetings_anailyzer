@@ -107,16 +107,16 @@ Add a login page (e.g. `pages/login.html`) served at `/login`. It should show a 
 - `llm_client.py` handles model API calls
 - `ai_templates.py` stores prompt-building logic
 - `models.py` stores request/response schemas
-- `database.py` contains SQLAlchemy models (`Meeting`, `Chunk`) and `init_db()`
+- `database.py` contains SQLAlchemy models (`Meeting`, `Chunk`, `Tag`, `MeetingTag`) and `init_db()`
 - `chunking.py` contains `chunk_text(notes) -> list[str]` — topic-based chunking for Teams AI format
-- `pages/index.html` contains the UI — inline CSS and JS, no build step required. Style uses the same design language as `meeting-laibrary`: purple gradient header (`#667eea` → `#764ba2`), white cards with `border-radius: 8px` and `box-shadow`, Inter font via Google Fonts, dark mode via `prefers-color-scheme`.
+- `pages/index.html` contains the UI — inline CSS and JS, no build step required. Layout: fixed sidebar (260px) listing saved meetings + main area showing either the analyze form or a meeting detail view. Style: purple gradient header (`#667eea` → `#764ba2`), white cards with `border-radius: 8px` and `box-shadow`, Inter font via Google Fonts, dark mode via `prefers-color-scheme`.
 - `auth.py` handles Okta authentication — PKCE flow, JWT validation, signed session cookies
 - `pages/login.html` contains the login page with a single "Sign in with Adobe (Okta)" button
 - `tests/` contains basic tests
 
 ## Persistence
 - SQLite via SQLAlchemy, stored in `meetings.db`
-- `meetings` table: `id`, `title`, `notes_raw`, `summary`, `action_items` (JSON string)
+- `meetings` table: `id`, `title`, `notes_raw`, `summary`, `action_items` (JSON string), `created_at` (UTC datetime)
 - `chunks` table: `id`, `meeting_id` (FK → meetings, cascade delete), `chunk_index`, `text`
 - `tags` table: `id`, `name` (unique across the whole table)
 - `meeting_tags` table: `id`, `meeting_id` (FK → meetings, cascade delete), `tag_id` (FK → tags, cascade delete), unique on `(meeting_id, tag_id)`
@@ -124,6 +124,18 @@ Add a login page (e.g. `pages/login.html`) served at `/login`. It should show a 
 - After each successful `/analyze` call, the meeting and its chunks are saved
 - After chunks are saved, tags are generated per chunk and linked to the meeting (deduplicated)
 - DB save failures are logged but never surface to the caller — `/analyze` always returns the LLM result
+
+## Meeting History & Detail View
+- `GET /meetings` — returns all meetings ordered by `created_at` desc (`id`, `title`, `created_at`)
+- `GET /meetings/{id}` — returns full meeting detail (`id`, `title`, `created_at`, `summary`, `action_items`, `tags`)
+- `POST /meetings/{id}/tags` — adds a tag to a meeting (body: `{name}`); max 10 tags per meeting; validates format; reuses existing global tag if name matches
+- `DELETE /meetings/{id}/tags/{tag_name}` — unlinks a tag from a meeting; does NOT delete the tag globally
+- Sidebar lists all meetings most recent first; updates after a new analysis is submitted
+- Clicking a sidebar item opens the detail view without a page reload
+- Detail view: title, date, summary, action items, editable tags
+- Tags display as color-coded badges; same tag name always gets the same color (deterministic hash over 8-color palette)
+- User can remove a tag from a meeting (unlink only) or add a new one (up to 10 total)
+- A "Back" button returns to the analyze form
 
 ## Tag Rules
 - Lowercase only

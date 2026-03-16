@@ -1,5 +1,6 @@
-from sqlalchemy import create_engine, Column, Integer, String, Text, ForeignKey, UniqueConstraint
+from sqlalchemy import create_engine, Column, Integer, String, Text, ForeignKey, UniqueConstraint, DateTime
 from sqlalchemy.orm import declarative_base, sessionmaker
+from datetime import datetime, timezone
 
 DATABASE_URL = "sqlite:///./meetings.db"
 
@@ -16,6 +17,7 @@ class Meeting(Base):
     notes_raw = Column(Text, nullable=False)
     summary = Column(Text, nullable=False)
     action_items = Column(Text, nullable=False)  # JSON string
+    created_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
 
 
 class Chunk(Base):
