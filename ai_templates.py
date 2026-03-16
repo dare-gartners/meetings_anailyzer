@@ -1,4 +1,4 @@
-def build_prompt(notes: str) -> str:
+def build_prompt(notes: str, title: str = "") -> str:
     return f"""You are an assistant that processes meeting notes.
 
 Given the following meeting notes (which may be in any language), return a JSON object in English with:
@@ -8,5 +8,6 @@ Given the following meeting notes (which may be in any language), return a JSON 
 
 Respond with valid JSON only.
 
+Meeting title: {title}
 Meeting notes:
 {notes}"""
