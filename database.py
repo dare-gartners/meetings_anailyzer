@@ -18,6 +18,9 @@ class Meeting(Base):
     summary = Column(Text, nullable=False)
     action_items = Column(Text, nullable=False)  # JSON string
     created_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
+    meeting_date = Column(String(20), nullable=True)
+    language = Column(String(100), nullable=True)
+    recording_url = Column(String(500), nullable=True)
 
 
 class Chunk(Base):
@@ -63,4 +66,10 @@ def init_db():
             conn.execute(sa.text("ALTER TABLE chunks ADD COLUMN description TEXT"))
         if "embedding" not in chunks_cols:
             conn.execute(sa.text("ALTER TABLE chunks ADD COLUMN embedding BLOB"))
+        if "meeting_date" not in meetings_cols:
+            conn.execute(sa.text("ALTER TABLE meetings ADD COLUMN meeting_date VARCHAR(20)"))
+        if "language" not in meetings_cols:
+            conn.execute(sa.text("ALTER TABLE meetings ADD COLUMN language VARCHAR(100)"))
+        if "recording_url" not in meetings_cols:
+            conn.execute(sa.text("ALTER TABLE meetings ADD COLUMN recording_url VARCHAR(500)"))
         conn.commit()

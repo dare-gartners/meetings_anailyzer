@@ -84,7 +84,10 @@ async def analyze(body: NotesRequest, request: Request):
             title=body.title,
             notes_raw=body.notes,
             summary=data.get("summary", ""),
-            action_items=json.dumps(data.get("action_items", [])),
+            action_items=json.dumps([]),
+            meeting_date=body.date,
+            language=body.language,
+            recording_url=body.recording_url,
         )
         db.add(meeting)
         db.flush()
@@ -148,6 +151,7 @@ async def analyze(body: NotesRequest, request: Request):
 
         db.commit()
         data["tags"] = [db.query(Tag).filter(Tag.id == tid).first().name for tid in linked_tag_ids]
+        data["id"] = meeting.id
     except Exception as e:
         logger.error("DB save failed: %s", e)
     finally:
@@ -192,9 +196,27 @@ def get_meeting(meeting_id: int, request: Request):
             title=m.title,
             created_at=m.created_at,
             summary=m.summary,
-            action_items=json.loads(m.action_items),
             tags=_meeting_tags(db, m.id),
+            date=m.meeting_date,
+            language=m.language,
+            recording_url=m.recording_url,
+            notes_raw=m.notes_raw,
         )
+    finally:
+        db.close()
+
+
+@app.delete("/meetings/{meeting_id}", status_code=204)
+def delete_meeting(meeting_id: int, request: Request):
+    if not auth.require_auth(request):
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    db = SessionLocal()
+    try:
+        m = db.query(Meeting).filter(Meeting.id == meeting_id).first()
+        if not m:
+            raise HTTPException(status_code=404, detail="Meeting not found")
+        db.delete(m)
+        db.commit()
     finally:
         db.close()
 
@@ -230,8 +252,11 @@ def add_tag(meeting_id: int, body: TagAddRequest, request: Request):
             title=m.title,
             created_at=m.created_at,
             summary=m.summary,
-            action_items=json.loads(m.action_items),
             tags=_meeting_tags(db, m.id),
+            date=m.meeting_date,
+            language=m.language,
+            recording_url=m.recording_url,
+            notes_raw=m.notes_raw,
         )
     finally:
         db.close()
@@ -258,8 +283,11 @@ def remove_tag(meeting_id: int, tag_name: str, request: Request):
             title=m.title,
             created_at=m.created_at,
             summary=m.summary,
-            action_items=json.loads(m.action_items),
             tags=_meeting_tags(db, m.id),
+            date=m.meeting_date,
+            language=m.language,
+            recording_url=m.recording_url,
+            notes_raw=m.notes_raw,
         )
     finally:
         db.close()
