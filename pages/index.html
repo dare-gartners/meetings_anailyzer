@@ -110,6 +110,22 @@
       color: #495057;
     }
 
+    .form-group input[type="text"] {
+      padding: 0.75rem;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: #212529;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input[type="text"]:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
+    }
+
     .form-group textarea {
       padding: 0.75rem;
       border: 1px solid #dee2e6;
@@ -269,6 +285,7 @@
       body { background: #1a1a1a; color: #f0f0f0; }
       .card { background: #2a2a2a; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
       .card h2 { color: #f0f0f0; }
+      .form-group input[type="text"] { background: #333; border-color: #555; color: #f0f0f0; }
       .form-group textarea { background: #333; border-color: #555; color: #f0f0f0; }
       .summary-text { background: #333; color: #f0f0f0; }
       .action-items li { background: #333; color: #f0f0f0; }
@@ -295,6 +312,10 @@
       <h2>Analyze Meeting Notes</h2>
       <div class="error-banner" id="error"></div>
       <form id="form">
+        <div class="form-group">
+          <label for="title">Meeting title</label>
+          <input id="title" type="text" placeholder="e.g. Q2 Planning Sync" />
+        </div>
         <div class="form-group">
           <label for="notes">Meeting notes</label>
           <textarea id="notes" placeholder="Paste your meeting notes here..."></textarea>
@@ -338,8 +359,17 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      const title = document.getElementById('title').value.trim();
       const notes = document.getElementById('notes').value.trim();
-      if (!notes) return;
+      if (!title || !notes) {
+        errorBanner.textContent = !title && !notes
+          ? 'Please fill in the meeting title and notes.'
+          : !title
+          ? 'Please fill in the meeting title.'
+          : 'Please fill in the meeting notes.';
+        errorBanner.classList.add('visible');
+        return;
+      }
 
       submitBtn.disabled = true;
       submitBtn.textContent = 'Analyzing…';
@@ -350,7 +380,7 @@
         const res = await fetch('/analyze', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ notes }),
+          body: JSON.stringify({ title, notes }),
         });
 
         if (!res.ok) {

@@ -1,4 +1,5 @@
 import json
+import logging
 from dotenv import load_dotenv
 
 load_dotenv()  # must be before auth import — env vars are read at module load
@@ -11,9 +12,15 @@ from fastapi.templating import Jinja2Templates
 
 from models import NotesRequest, NotesResponse
 from llm_client import analyze_notes
+from database import init_db, SessionLocal, Meeting, Chunk
+from chunking import chunk_text
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 templates = Jinja2Templates(directory="pages")
+
+init_db()
 
 
 # --- Auth routes ---
@@ -60,9 +67,28 @@ def index(request: Request):
 def analyze(body: NotesRequest, request: Request):
     if not auth.require_auth(request):
         raise HTTPException(status_code=401, detail="Not authenticated")
-    raw = analyze_notes(body.notes)
+    raw = analyze_notes(body.notes, body.title)
     try:
         data = json.loads(raw)
     except json.JSONDecodeError:
         raise HTTPException(status_code=500, detail="Model returned invalid JSON")
+
+    try:
+        db = SessionLocal()
+        meeting = Meeting(
+            title=body.title,
+            notes_raw=body.notes,
+            summary=data.get("summary", ""),
+            action_items=json.dumps(data.get("action_items", [])),
+        )
+        db.add(meeting)
+        db.flush()
+        for idx, chunk in enumerate(chunk_text(body.notes)):
+            db.add(Chunk(meeting_id=meeting.id, chunk_index=idx, text=chunk))
+        db.commit()
+    except Exception as e:
+        logger.error("DB save failed: %s", e)
+    finally:
+        db.close()
+
     return NotesResponse(**data)

@@ -107,10 +107,29 @@ Add a login page (e.g. `pages/login.html`) served at `/login`. It should show a 
 - `llm_client.py` handles model API calls
 - `ai_templates.py` stores prompt-building logic
 - `models.py` stores request/response schemas
+- `database.py` contains SQLAlchemy models (`Meeting`, `Chunk`) and `init_db()`
+- `chunking.py` contains `chunk_text(notes) -> list[str]` — topic-based chunking for Teams AI format
 - `pages/index.html` contains the UI — inline CSS and JS, no build step required. Style uses the same design language as `meeting-laibrary`: purple gradient header (`#667eea` → `#764ba2`), white cards with `border-radius: 8px` and `box-shadow`, Inter font via Google Fonts, dark mode via `prefers-color-scheme`.
 - `auth.py` handles Okta authentication — PKCE flow, JWT validation, signed session cookies
 - `pages/login.html` contains the login page with a single "Sign in with Adobe (Okta)" button
 - `tests/` contains basic tests
+
+## Persistence
+- SQLite via SQLAlchemy, stored in `meetings.db`
+- `meetings` table: `id`, `title`, `notes_raw`, `summary`, `action_items` (JSON string)
+- `chunks` table: `id`, `meeting_id` (FK → meetings, cascade delete), `chunk_index`, `text`
+- DB is initialized at app startup via `init_db()`
+- After each successful `/analyze` call, the meeting and its chunks are saved
+- DB save failures are logged but never surface to the caller — `/analyze` always returns the LLM result
+
+## Chunking (Teams AI format)
+- Topic header: a line with NO leading whitespace that ends with `:`
+- Lines with leading whitespace ending with `:` are content, not headers
+- One chunk = one topic header + all indented lines beneath it
+- Lines before the first topic header are skipped
+- Everything from `follow-up tasks:` (case-insensitive) onward is stripped before chunking
+- `Meeting notes:` (case-insensitive) is NOT a topic header — it is a document-level label and is ignored/skipped
+- Fallback: if no topic headers found, return the full text as one chunk
 
 ## Output Requirements
 The model output should be structured and easy to parse.
@@ -118,6 +137,12 @@ Prefer JSON-shaped output with:
 - summary
 - action_items
 - tags
+
+## Input Fields
+- `title` — required meeting title, passed to the prompt to give the model context
+- `notes` — required meeting notes (any language; output always in English)
+
+Both fields are required. The frontend validates before submitting and shows a specific error message if either field is empty.
 
 ## Safe Editing Rules
 - Keep changes minimal
