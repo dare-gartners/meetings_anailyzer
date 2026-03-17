@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>📚 Meeting Notes AI</title>
+  <title>Meeting L-AI-brary</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
@@ -323,8 +323,15 @@
     .tag-add-form input {
       padding: 0.35rem 0.65rem;
       border: 1px solid #dee2e6; border-radius: 9999px;
-      font-size: 0.875rem; font-family: inherit; width: 140px;
+      font-size: 0.875rem; font-family: inherit; flex: 1;
     }
+
+    .sim-open-btn {
+      background: none; border: none; color: #667eea;
+      cursor: pointer; font-size: 0.9rem; padding: 0 0.25rem;
+      vertical-align: middle; font-family: inherit;
+    }
+    .sim-open-btn:hover { text-decoration: underline; }
     .tag-add-form input:focus {
       outline: none; border-color: #667eea;
       box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
@@ -353,12 +360,14 @@
 
     .section-divider { border: none; border-top: 1px solid #dee2e6; margin: 1.25rem 0; }
 
-    /* Detail meta (date / language / recording) */
+    /* Detail meta (date / recording / created-at) */
     .detail-meta {
       display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem;
       font-size: 0.875rem; color: #6c757d; margin-top: 0.35rem;
+      align-items: center;
     }
     .detail-meta-item { display: flex; align-items: center; gap: 0.35rem; }
+    .detail-meta-created { margin-left: auto; font-size: 0.8rem; color: #adb5bd; }
     .recording-link {
       color: #667eea; text-decoration: none;
       display: flex; align-items: center; gap: 0.35rem;
@@ -529,6 +538,7 @@
       .back-btn:hover { background: #333; }
       .tag-add-form input { background: #333; border-color: #555; color: #f0f0f0; }
       .lang-badge { background: #333; border-color: #555; color: #ccc; }
+      .detail-meta-created { color: #666; }
       .delete-btn { border-color: #7f3a42; color: #f87171; }
       .delete-btn:hover { background: #3a2020; }
       .full-summary { border-top-color: #444; }
@@ -554,8 +564,8 @@
 
   <header class="app-header">
     <div class="header-inner">
-      <h1>📚 Meeting Notes AI</h1>
-      <p class="app-subtitle">Paste your meeting notes and get an instant summary and tags</p>
+      <h1>📚 Meeting L-AI-brary</h1>
+      <p class="app-subtitle">AI-powered meeting library with smart tagging and semantic search</p>
       <div class="header-user">
         <span>{{ email }}</span>
         <a class="logout-btn" href="/auth/logout">Sign out</a>
@@ -567,7 +577,7 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-header">
-        <h2>History</h2>
+        <h2>Meetings</h2>
         <button class="new-btn" id="new-btn">+ New</button>
       </div>
       <div class="sidebar-list" id="sidebar-list">
@@ -596,10 +606,6 @@
             <div class="form-group">
               <label for="date">Meeting date</label>
               <input id="date" type="date" />
-            </div>
-            <div class="form-group">
-              <label for="language">Language</label>
-              <input id="language" type="text" placeholder="e.g. English, Spanish" />
             </div>
             <div class="form-group">
               <label for="recording-url">Recording URL</label>
@@ -631,7 +637,7 @@
             <h3>Tags <span class="tag-count" id="tag-count"></span></h3>
             <div class="tags" id="detail-tags"></div>
             <div class="tag-add-form" id="tag-add-form">
-              <input type="text" id="tag-input" placeholder="add-tag" maxlength="60" />
+              <input type="text" id="tag-input" placeholder="Add a tag..." maxlength="60" />
               <button class="tag-add-btn" id="tag-add-btn" type="button">Add</button>
             </div>
             <div class="tag-error" id="tag-error"></div>
@@ -659,7 +665,7 @@
   </div>
 
   <footer class="app-footer">
-    <p>📚 Meeting Notes AI &mdash; powered by Azure OpenAI</p>
+    <p>📚 Meeting L-AI-brary &mdash; powered by Azure OpenAI</p>
   </footer>
 
   <script>
@@ -729,7 +735,6 @@
       document.getElementById('title').value = '';
       document.getElementById('notes').value = '';
       document.getElementById('date').value = '';
-      document.getElementById('language').value = '';
       document.getElementById('recording-url').value = '';
       errorBanner.classList.remove('visible');
       viewAnalyze.style.display = '';
@@ -760,16 +765,11 @@
       document.getElementById('detail-summary').textContent = m.summary || '—';
       document.getElementById('detail-notes-raw').textContent = m.notes_raw || '';
 
-      // Meta row: saved date, meeting date, language, recording URL
+      // Meta row: recording (left), meeting date (right)
       const meta = document.getElementById('detail-meta');
       meta.innerHTML = '';
-      const savedDate = new Date(m.created_at).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
-      meta.innerHTML += `<span class="detail-meta-item">${esc(savedDate)}</span>`;
-      if (m.date) meta.innerHTML += `<span class="detail-meta-item">📅 ${esc(m.date)}</span>`;
-      if (m.language) meta.innerHTML += `<span class="detail-meta-item"><span class="lang-badge">${esc(m.language)}</span></span>`;
-      if (m.recording_url) {
-        meta.innerHTML += `<a class="recording-link" href="${esc(m.recording_url)}" target="_blank" rel="noopener">🎥 Recording</a>`;
-      }
+      if (m.recording_url) meta.innerHTML += `<a class="recording-link" href="${esc(m.recording_url)}" target="_blank" rel="noopener">🎥 Recording</a>`;
+      if (m.date) meta.innerHTML += `<span class="detail-meta-created">📅 ${esc(m.date)}</span>`;
 
       renderDetailTags(m.tags || [], m.id);
 
@@ -807,7 +807,6 @@
       document.getElementById('title').value = '';
       document.getElementById('notes').value = '';
       document.getElementById('date').value = '';
-      document.getElementById('language').value = '';
       document.getElementById('recording-url').value = '';
       errorBanner.classList.remove('visible');
     });
@@ -825,7 +824,6 @@
         return;
       }
       const date         = document.getElementById('date').value || null;
-      const language     = document.getElementById('language').value.trim() || null;
       const recordingUrl = document.getElementById('recording-url').value.trim() || null;
 
       submitBtn.disabled = true;
@@ -836,7 +834,7 @@
         const res = await fetch('/analyze', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, notes, date, language, recording_url: recordingUrl }),
+          body: JSON.stringify({ title, notes, date, recording_url: recordingUrl }),
         });
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
@@ -1041,7 +1039,7 @@
         </colgroup>
         <thead><tr>
           <th>This meeting</th>
-          <th>${esc(m.title)}</th>
+          <th>${esc(m.title)} <button class="sim-open-btn" onclick="openMeeting(${m.id})" type="button" title="Open meeting">↗</button></th>
           <th>Match</th>
           <th></th>
         </tr></thead>

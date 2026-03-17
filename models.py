@@ -7,7 +7,6 @@ class NotesRequest(BaseModel):
     title: str
     notes: str
     date: Optional[str] = None
-    language: Optional[str] = None
     recording_url: Optional[str] = None
 
 
@@ -30,7 +29,6 @@ class MeetingDetail(BaseModel):
     summary: str
     tags: List[str]
     date: Optional[str] = None
-    language: Optional[str] = None
     recording_url: Optional[str] = None
     notes_raw: Optional[str] = None
 
