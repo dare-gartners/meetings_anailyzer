@@ -112,14 +112,15 @@ Add a login page (e.g. `pages/login.html`) served at `/login`. It should show a 
 - `database.py` contains SQLAlchemy models (`Meeting`, `Chunk`, `Tag`, `MeetingTag`) and `init_db()` (also runs ALTER TABLE migrations for new columns)
 - `.env.example` documents all required environment variables with placeholder values
 - `chunking.py` contains `chunk_text(notes) -> list[str]` — topic-based chunking for Teams AI format
-- `pages/index.html` contains the UI — inline CSS and JS, no build step required. Layout: fixed sidebar (260px) listing saved meetings + main area showing either the new-meeting form or a meeting detail view. Style: purple gradient header (`#667eea` → `#764ba2`), white cards with `border-radius: 8px` and `box-shadow`, Inter font via Google Fonts, dark mode via `prefers-color-scheme`. The new-meeting form has fields: title (required), notes (required), date, language, recording URL, plus Save and Cancel buttons.
+- `pages/index.html` contains the UI — inline CSS and JS, no build step required. Layout: fixed sidebar (260px) listing saved meetings + main area showing either the new-meeting form or a meeting detail view. Style: purple gradient header (`#667eea` → `#764ba2`), white cards with `border-radius: 8px` and `box-shadow`, Inter font via Google Fonts, dark mode via `prefers-color-scheme`. The new-meeting form has fields: title (required), notes (required), date, recording URL, plus Save and Cancel buttons. App title is "Meeting L-AI-brary". Sidebar heading is "Meetings".
 - `auth.py` handles Okta authentication — PKCE flow, JWT validation, signed session cookies
 - `pages/login.html` contains the login page with a single "Sign in with Adobe (Okta)" button
 - `tests/` contains basic tests
 
 ## Persistence
 - SQLite via SQLAlchemy, stored in `meetings.db`
-- `meetings` table: `id`, `title`, `notes_raw`, `summary`, `action_items` (JSON string — always `"[]"` for new records; column kept for backward compat), `created_at` (UTC datetime), `meeting_date` (VARCHAR(20), nullable), `language` (VARCHAR(100), nullable), `recording_url` (VARCHAR(500), nullable)
+- `meetings` table: `id`, `title`, `notes_raw`, `summary`, `action_items` (JSON string — always `"[]"` for new records; column kept for backward compat), `created_at` (UTC datetime), `meeting_date` (VARCHAR(20), nullable), `recording_url` (VARCHAR(500), nullable — unique at application level; 409 returned if duplicate URL submitted)
+- `language` column is dropped via `ALTER TABLE meetings DROP COLUMN language` in `init_db()` if it exists (migration for older DBs)
 - `chunks` table: `id`, `meeting_id` (FK → meetings, cascade delete), `chunk_index`, `text`, `description` (TEXT, nullable), `embedding` (BLOB, nullable — numpy float32 array serialized via `.tobytes()`)
 - `tags` table: `id`, `name` (unique across the whole table)
 - `meeting_tags` table: `id`, `meeting_id` (FK → meetings, cascade delete), `tag_id` (FK → tags, cascade delete), unique on `(meeting_id, tag_id)`
@@ -133,19 +134,20 @@ Add a login page (e.g. `pages/login.html`) served at `/login`. It should show a 
 
 ## Meeting History & Detail View
 - `GET /meetings` — returns all meetings ordered by `created_at` desc (`id`, `title`, `created_at`)
-- `GET /meetings/{id}` — returns full meeting detail (`id`, `title`, `created_at`, `summary`, `tags`, `date`, `language`, `recording_url`, `notes_raw`)
+- `GET /meetings/{id}` — returns full meeting detail (`id`, `title`, `created_at`, `summary`, `tags`, `date`, `recording_url`, `notes_raw`)
 - `POST /meetings/{id}/tags` — adds a tag to a meeting (body: `{name}`); max 10 tags per meeting; validates format; reuses existing global tag if name matches
 - `DELETE /meetings/{id}/tags/{tag_name}` — unlinks a tag from a meeting; does NOT delete the tag globally
 - `DELETE /meetings/{id}` — deletes the meeting and all its chunks/tags (cascade); returns 204
 - Sidebar lists all meetings most recent first; updates after a new meeting is saved
 - Clicking a sidebar item opens the detail view without a page reload
-- Detail view layout (top to bottom): Back + Delete buttons → title → meta row (saved date, meeting date, language badge, recording link) → Tags section → Summary → "Show related meetings" button → Full Notes collapsible
-- Meta row: saved timestamp, optional meeting date (📅), optional language badge, optional recording URL shown as "🎥 Recording" link
+- Detail view layout (top to bottom): Back + Delete buttons → title → meta row → Tags section → Summary → "Show related meetings" button → Full Notes collapsible
+- Meta row: optional recording link (🎥, left) + optional meeting date (📅, right, pushed via `margin-left: auto`); `created_at` and language are not shown
 - Tags display as color-coded badges; same tag name always gets the same color (deterministic hash over 10-color palette defined in `index.html` as `TAG_COLORS`)
-- User can remove a tag from a meeting (unlink only) or add a new one (up to 10 total)
+- User can remove a tag from a meeting (unlink only) or add a new one (up to 10 total); the tag input spans full width (`flex: 1`) with placeholder "Add a tag..."
 - A "Back" button returns to the new-meeting form; a "Delete" button deletes the meeting after confirmation
 - A "Show related meetings" button appears below the summary — triggers `POST /meetings/{id}/similar`; do NOT rename or change the backend logic
-- Similar meeting results render as cards; clicking the title opens the meeting
+- Similar meeting results render as cards; clicking the title in the card header opens the meeting
+- The similar meetings table has columns: "This meeting" | matched meeting title (with a ↗ button to open it) | Match % | Why?; the ↗ button calls `openMeeting(id)` inline
 - Each card uses a single table with columns "This meeting" | "{matched meeting title}" | "Match %" | "Why?"
 - Collapsed state: header (title, date, green similarity badge, +/− toggle) + table showing only the best-match row; "+ N more matching topics" row below if multiple matches
 - Expanded state (toggle via +/− button or the "+ N more" link): all matching rows shown, extra row hidden
@@ -210,8 +212,7 @@ Prefer JSON-shaped output with:
 - `title` — required meeting title, passed to the prompt to give the model context
 - `notes` — required meeting notes (any language; output always in English)
 - `date` — optional meeting date (ISO date string, e.g. `2026-03-17`)
-- `language` — optional language label (free text, e.g. `Spanish`)
-- `recording_url` — optional URL to the meeting recording
+- `recording_url` — optional URL to the meeting recording; if provided, must be unique across all meetings (409 if duplicate)
 
 `title` and `notes` are required. The frontend validates before submitting and shows a specific error message if either is empty. After a successful save, the frontend navigates to the meeting detail view and shows a "Meeting saved successfully." banner for 5 seconds. The form has a "Cancel" button that clears all fields without navigating away.
 

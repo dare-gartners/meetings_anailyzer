@@ -1,11 +1,14 @@
 import os
 import re
 import json
+import time
+import logging
 import numpy as np
 from openai import AzureOpenAI
 from ai_templates import build_prompt
 
 TAG_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+logger = logging.getLogger(__name__)
 
 
 def _client() -> AzureOpenAI:
@@ -17,15 +20,18 @@ def _client() -> AzureOpenAI:
 
 
 def analyze_notes(notes: str, title: str = "") -> str:
+    t0 = time.perf_counter()
     response = _client().chat.completions.create(
         model=os.environ["AZURE_OPENAI_DEPLOYMENT"],
         messages=[{"role": "user", "content": build_prompt(notes, title)}],
         max_tokens=1024,
     )
+    logger.info("llm:analyze_notes done %.0fms", (time.perf_counter() - t0) * 1000)
     return response.choices[0].message.content
 
 
 def generate_description(chunk: str) -> str:
+    t0 = time.perf_counter()
     prompt = (
         "In up to 3 sentences, describe the specific problem or decision addressed in this topic. "
         "Focus on what is being solved or decided, not the product area or domain it belongs to. "
@@ -38,10 +44,12 @@ def generate_description(chunk: str) -> str:
         messages=[{"role": "user", "content": prompt}],
         max_tokens=192,
     )
+    logger.info("llm:generate_description done %.0fms", (time.perf_counter() - t0) * 1000)
     return response.choices[0].message.content.strip()
 
 
 def verify_match(desc_a: str, desc_b: str) -> bool:
+    t0 = time.perf_counter()
     prompt = (
         "Two meeting topics were flagged as semantically similar by an embedding model. "
         "Your job is to decide whether they genuinely discuss the same subject matter — "
@@ -55,10 +63,13 @@ def verify_match(desc_a: str, desc_b: str) -> bool:
         messages=[{"role": "user", "content": prompt}],
         max_tokens=5,
     )
-    return response.choices[0].message.content.strip().lower().startswith("yes")
+    result = response.choices[0].message.content.strip().lower().startswith("yes")
+    logger.info("llm:verify_match done %.0fms result=%s", (time.perf_counter() - t0) * 1000, result)
+    return result
 
 
 def explain_match(source_chunk: str, matched_chunk: str) -> str:
+    t0 = time.perf_counter()
     prompt = (
         "Two meeting topics were found to be semantically similar. "
         "In 1-2 sentences, describe what subject matter they had in common. "
@@ -70,19 +81,23 @@ def explain_match(source_chunk: str, matched_chunk: str) -> str:
         messages=[{"role": "user", "content": prompt}],
         max_tokens=100,
     )
+    logger.info("llm:explain_match done %.0fms", (time.perf_counter() - t0) * 1000)
     return response.choices[0].message.content.strip()
 
 
 def generate_embedding(text: str) -> bytes:
+    t0 = time.perf_counter()
     response = _client().embeddings.create(
         model=os.environ["AZURE_OPENAI_EMBEDDING_DEPLOYMENT"],
         input=text,
     )
     vector = np.array(response.data[0].embedding, dtype=np.float32)
+    logger.info("embedding:generate done %.0fms", (time.perf_counter() - t0) * 1000)
     return vector.tobytes()
 
 
 def generate_tags(chunk: str, existing_tags: list[str]) -> list[str]:
+    t0 = time.perf_counter()
     existing_hint = (
         f"Existing tags (reuse if semantically similar): {', '.join(existing_tags)}"
         if existing_tags
@@ -113,4 +128,6 @@ Chunk:
     # Strip markdown code fences if present
     raw = re.sub(r"^```[a-z]*\n?", "", raw).rstrip("` \n")
     tags = json.loads(raw)
-    return [t for t in tags if isinstance(t, str) and TAG_PATTERN.match(t)]
+    result = [t for t in tags if isinstance(t, str) and TAG_PATTERN.match(t)]
+    logger.info("llm:generate_tags done %.0fms tags=%s", (time.perf_counter() - t0) * 1000, result)
+    return result

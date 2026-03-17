@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import time
 from dotenv import load_dotenv
 
 load_dotenv()  # must be before auth import — env vars are read at module load
@@ -18,6 +19,11 @@ from llm_client import analyze_notes, generate_tags, generate_description, gener
 from database import init_db, SessionLocal, Meeting, Chunk, Tag, MeetingTag
 from chunking import chunk_text
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)-5s %(name)s | %(message)s",
+    datefmt="%Y-%m-%dT%H:%M:%S",
+)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
@@ -71,6 +77,17 @@ async def analyze(body: NotesRequest, request: Request):
     if not auth.require_auth(request):
         raise HTTPException(status_code=401, detail="Not authenticated")
 
+    t_req = time.perf_counter()
+    logger.info("analyze:start title=%r", body.title)
+
+    if body.recording_url:
+        db = SessionLocal()
+        try:
+            if db.query(Meeting).filter(Meeting.recording_url == body.recording_url).first():
+                raise HTTPException(status_code=409, detail="A meeting with this recording URL already exists.")
+        finally:
+            db.close()
+
     loop = asyncio.get_event_loop()
     raw = await loop.run_in_executor(None, analyze_notes, body.notes, body.title)
     try:
@@ -86,7 +103,6 @@ async def analyze(body: NotesRequest, request: Request):
             summary=data.get("summary", ""),
             action_items=json.dumps([]),
             meeting_date=body.date,
-            language=body.language,
             recording_url=body.recording_url,
         )
         db.add(meeting)
@@ -99,6 +115,7 @@ async def analyze(body: NotesRequest, request: Request):
             db.add(c)
             chunk_rows.append(c)
         db.commit()
+        logger.info("analyze:meeting_saved id=%s chunks=%d", meeting.id, len(chunk_rows))
 
         # All descriptions in parallel
         async def _describe(c):
@@ -108,7 +125,9 @@ async def analyze(body: NotesRequest, request: Request):
                 logger.error("Description generation failed for chunk %s: %s", c.id, e)
                 return None
 
+        t0 = time.perf_counter()
         descriptions = await asyncio.gather(*[_describe(c) for c in chunk_rows])
+        logger.info("analyze:descriptions_batch done %.0fms chunks=%d", (time.perf_counter() - t0) * 1000, len(chunk_rows))
 
         for c, desc in zip(chunk_rows, descriptions):
             c.description = desc
@@ -122,7 +141,9 @@ async def analyze(body: NotesRequest, request: Request):
             except Exception as e:
                 logger.error("Embedding generation failed for chunk %s: %s", c.id, e)
 
+        t0 = time.perf_counter()
         await asyncio.gather(*[_embed(c) for c in chunk_rows])
+        logger.info("analyze:embeddings_batch done %.0fms chunks=%d", (time.perf_counter() - t0) * 1000, len(chunk_rows))
         db.commit()
 
         # All tag generation in parallel
@@ -135,7 +156,9 @@ async def analyze(body: NotesRequest, request: Request):
                 logger.error("Tag generation failed for chunk %s: %s", c.id, e)
                 return []
 
+        t0 = time.perf_counter()
         all_tag_names = await asyncio.gather(*[_tags(c) for c in chunk_rows])
+        logger.info("analyze:tags_batch done %.0fms chunks=%d", (time.perf_counter() - t0) * 1000, len(chunk_rows))
 
         linked_tag_ids: set[int] = set()
         for tag_names in all_tag_names:
@@ -157,6 +180,7 @@ async def analyze(body: NotesRequest, request: Request):
     finally:
         db.close()
 
+    logger.info("analyze:done total=%.0fms", (time.perf_counter() - t_req) * 1000)
     return NotesResponse(**data)
 
 
@@ -198,7 +222,6 @@ def get_meeting(meeting_id: int, request: Request):
             summary=m.summary,
             tags=_meeting_tags(db, m.id),
             date=m.meeting_date,
-            language=m.language,
             recording_url=m.recording_url,
             notes_raw=m.notes_raw,
         )
@@ -254,7 +277,6 @@ def add_tag(meeting_id: int, body: TagAddRequest, request: Request):
             summary=m.summary,
             tags=_meeting_tags(db, m.id),
             date=m.meeting_date,
-            language=m.language,
             recording_url=m.recording_url,
             notes_raw=m.notes_raw,
         )
@@ -285,7 +307,6 @@ def remove_tag(meeting_id: int, tag_name: str, request: Request):
             summary=m.summary,
             tags=_meeting_tags(db, m.id),
             date=m.meeting_date,
-            language=m.language,
             recording_url=m.recording_url,
             notes_raw=m.notes_raw,
         )
@@ -302,6 +323,8 @@ def _cosine(a: np.ndarray, b: np.ndarray) -> float:
 async def find_similar(meeting_id: int, request: Request):
     if not auth.require_auth(request):
         raise HTTPException(status_code=401, detail="Not authenticated")
+    t_req = time.perf_counter()
+    logger.info("similar:start meeting_id=%s", meeting_id)
     db = SessionLocal()
     try:
         source_chunks = (
@@ -310,6 +333,7 @@ async def find_similar(meeting_id: int, request: Request):
             .all()
         )
         if not source_chunks:
+            logger.info("similar:no_embeddings meeting_id=%s", meeting_id)
             return []
 
         source_vecs = [np.frombuffer(c.embedding, dtype=np.float32) for c in source_chunks]
@@ -319,6 +343,7 @@ async def find_similar(meeting_id: int, request: Request):
             .filter(Chunk.meeting_id != meeting_id, Chunk.embedding.isnot(None))
             .all()
         )
+        logger.info("similar:embedding_filter source_chunks=%d other_chunks=%d", len(source_chunks), len(other_chunks))
 
         # Best match per (meeting_id, source_chunk_id) — prevents the same source chunk from appearing multiple times
         best_per_source: dict[tuple[int, int], tuple[float, str, str | None, str, str | None]] = {}
@@ -332,6 +357,8 @@ async def find_similar(meeting_id: int, request: Request):
             existing = best_per_source.get(key)
             if existing is None or top_score > existing[0]:
                 best_per_source[key] = (top_score, chunk.text, chunk.description, best_source_text, best_source_desc)
+
+        logger.info("similar:candidates_above_threshold count=%d", len(best_per_source))
 
         # LLM re-ranking: verify all candidates in parallel
         loop = asyncio.get_event_loop()
@@ -347,7 +374,10 @@ async def find_similar(meeting_id: int, request: Request):
                 logger.error("verify_match failed: %s", e)
                 return key, entry, True  # fail open
 
+        t0 = time.perf_counter()
         verified = await asyncio.gather(*[_verify(k, v) for k, v in candidates])
+        passed_count = sum(1 for _, _, p in verified if p)
+        logger.info("similar:verify_batch done %.0fms candidates=%d passed=%d", (time.perf_counter() - t0) * 1000, len(candidates), passed_count)
 
         all_matches: dict[int, list[tuple[float, str, str | None, str, str | None]]] = {}
         for (mid, _src_id), entry, passed in verified:
@@ -355,6 +385,7 @@ async def find_similar(meeting_id: int, request: Request):
                 all_matches.setdefault(mid, []).append(entry)
 
         if not all_matches:
+            logger.info("similar:done no_results total=%.0fms", (time.perf_counter() - t_req) * 1000)
             return []
 
         # Sort meetings by best score, take top 5
@@ -386,6 +417,7 @@ async def find_similar(meeting_id: int, request: Request):
                     for s, matched, matched_desc, src, src_desc in chunk_matches
                 ],
             ))
+        logger.info("similar:done results=%d total=%.0fms", len(results), (time.perf_counter() - t_req) * 1000)
         return results
     finally:
         db.close()
