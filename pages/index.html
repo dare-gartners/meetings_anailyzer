@@ -157,6 +157,30 @@
       text-align: center;
     }
 
+    .sidebar-section {
+      padding: 1rem 1.25rem 0.75rem;
+      border-top: 1px solid #dee2e6;
+      border-bottom: 1px solid #dee2e6;
+      flex-shrink: 0;
+    }
+    .sidebar-section h2 {
+      margin: 0;
+      font-size: 0.875rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      color: #6c757d;
+    }
+
+    .tags-analytics { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+    .tag-stat { cursor: pointer; gap: 0.5rem; }
+    .tag-stat:hover { opacity: 0.8; }
+    .tag-stat.tag-active { outline: 2px solid currentColor; outline-offset: 2px; }
+
+    .tag-stat-count {
+      background: rgba(0,0,0,0.15); border-radius: 9999px;
+      padding: 0.05rem 0.45rem; font-size: 0.78rem; font-weight: 600;
+    }
+
     /* Main area */
     .app-main {
       flex: 1;
@@ -518,6 +542,8 @@
       .sidebar { background: #242424; border-color: #3a3a3a; }
       .sidebar-header { border-color: #3a3a3a; }
       .sidebar-item:hover { background: #2e2e2e; }
+      .sidebar-section { border-color: #3a3a3a; }
+      .sidebar-section h2 { color: #888; }
       .sidebar-item.active { background: #2a2550; border-left-color: #667eea; }
       .sidebar-item-title { color: #f0f0f0; }
       .card { background: #2a2a2a; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
@@ -583,6 +609,12 @@
       <div class="sidebar-list" id="sidebar-list">
         <div class="sidebar-empty">No meetings yet.</div>
       </div>
+      <div class="sidebar-section">
+        <h2>Analytics</h2>
+      </div>
+      <div class="sidebar-item" id="tags-nav-btn">
+        <div class="sidebar-item-title">Trending Topics</div>
+      </div>
     </aside>
 
     <!-- Main -->
@@ -616,6 +648,14 @@
               <button class="cancel-btn" type="button" id="cancel-btn">Cancel</button>
             </div>
           </form>
+        </div>
+      </div>
+
+      <!-- Tags view -->
+      <div id="view-tags" style="display:none;">
+        <div class="card">
+          <h2>Tags</h2>
+          <div class="tags-analytics" id="tags-analytics"></div>
         </div>
       </div>
 
@@ -691,6 +731,7 @@
 
     // ── State ────────────────────────────────────────────────────────────────
     let currentMeetingId = null;
+    let activeTagFilter = null;
 
     // ── DOM refs ─────────────────────────────────────────────────────────────
     const viewAnalyze = document.getElementById('view-analyze');
@@ -704,7 +745,8 @@
 
     // ── Sidebar ──────────────────────────────────────────────────────────────
     async function loadSidebar() {
-      const res = await fetch('/meetings');
+      const url = activeTagFilter ? `/meetings?tag=${encodeURIComponent(activeTagFilter)}` : '/meetings';
+      const res = await fetch(url);
       if (!res.ok) return;
       const meetings = await res.json();
       sidebarList.innerHTML = '';
@@ -739,7 +781,44 @@
       errorBanner.classList.remove('visible');
       viewAnalyze.style.display = '';
       viewDetail.style.display  = 'none';
+      document.getElementById('view-tags').style.display = 'none';
+      document.getElementById('tags-nav-btn').classList.remove('active');
       setSidebarActive(null);
+    }
+
+    async function showTagsView() {
+      viewAnalyze.style.display = 'none';
+      viewDetail.style.display  = 'none';
+      document.getElementById('view-tags').style.display = '';
+      document.getElementById('tags-nav-btn').classList.add('active');
+      setSidebarActive(null);
+      const res = await fetch('/tags/trending');
+      if (!res.ok) return;
+      const tags = await res.json();
+      renderTagsAnalytics(tags);
+    }
+
+    function renderTagsAnalytics(tags) {
+      const container = document.getElementById('tags-analytics');
+      container.innerHTML = '';
+      if (!tags.length) {
+        container.textContent = 'No tags yet.';
+        return;
+      }
+      tags.forEach(t => {
+        const p = tagPalette(t.name);
+        const span = document.createElement('span');
+        span.className = 'tag tag-stat' + (activeTagFilter === t.name ? ' tag-active' : '');
+        span.style.background = p.bg;
+        span.style.color = p.color;
+        span.innerHTML = `${esc(t.name)} <span class="tag-stat-count">${t.count}</span>`;
+        span.addEventListener('click', () => {
+          activeTagFilter = activeTagFilter === t.name ? null : t.name;
+          loadSidebar();
+          renderTagsAnalytics(tags);
+        });
+        container.appendChild(span);
+      });
     }
 
     async function openMeeting(id, successMessage = null) {
@@ -750,6 +829,7 @@
       renderDetail(m);
       viewAnalyze.style.display = 'none';
       viewDetail.style.display  = '';
+      document.getElementById('view-tags').style.display = 'none';
       setSidebarActive(id);
       if (successMessage) {
         const banner = document.getElementById('success-banner');
@@ -802,6 +882,7 @@
     // ── Analyze form ─────────────────────────────────────────────────────────
     document.getElementById('new-btn').addEventListener('click', showAnalyzeView);
     document.getElementById('back-btn').addEventListener('click', showAnalyzeView);
+    document.getElementById('tags-nav-btn').addEventListener('click', showTagsView);
 
     document.getElementById('cancel-btn').addEventListener('click', () => {
       document.getElementById('title').value = '';

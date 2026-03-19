@@ -14,8 +14,9 @@ from fastapi.templating import Jinja2Templates
 
 import re
 import numpy as np
-from models import NotesRequest, NotesResponse, MeetingListItem, MeetingDetail, TagAddRequest, SimilarMeeting, ChunkMatch, ExplainRequest
+from models import NotesRequest, NotesResponse, MeetingListItem, MeetingDetail, TagAddRequest, SimilarMeeting, ChunkMatch, ExplainRequest, TagStats
 from llm_client import analyze_notes, generate_tags, generate_description, generate_embedding, explain_match, verify_match
+from sqlalchemy import func
 from database import init_db, SessionLocal, Meeting, Chunk, Tag, MeetingTag
 from chunking import chunk_text
 
@@ -185,13 +186,36 @@ async def analyze(body: NotesRequest, request: Request):
 
 
 @app.get("/meetings", response_model=list[MeetingListItem])
-def list_meetings(request: Request):
+def list_meetings(request: Request, tag: str = None):
     if not auth.require_auth(request):
         raise HTTPException(status_code=401, detail="Not authenticated")
     db = SessionLocal()
     try:
-        meetings = db.query(Meeting).order_by(Meeting.created_at.desc()).all()
+        q = db.query(Meeting)
+        if tag:
+            q = (q.join(MeetingTag, MeetingTag.meeting_id == Meeting.id)
+                  .join(Tag, Tag.id == MeetingTag.tag_id)
+                  .filter(Tag.name == tag))
+        meetings = q.order_by(Meeting.created_at.desc()).all()
         return [MeetingListItem(id=m.id, title=m.title, created_at=m.created_at) for m in meetings]
+    finally:
+        db.close()
+
+
+@app.get("/tags/trending", response_model=list[TagStats])
+def tags_trending(request: Request):
+    if not auth.require_auth(request):
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    db = SessionLocal()
+    try:
+        rows = (
+            db.query(Tag.id, Tag.name, func.count(MeetingTag.id).label("cnt"))
+            .join(MeetingTag, MeetingTag.tag_id == Tag.id)
+            .group_by(Tag.id)
+            .order_by(func.count(MeetingTag.id).desc())
+            .all()
+        )
+        return [TagStats(id=r.id, name=r.name, count=r.cnt) for r in rows]
     finally:
         db.close()
 
