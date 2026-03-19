@@ -58,3 +58,9 @@ class SimilarMeeting(BaseModel):
 class ExplainRequest(BaseModel):
     source_chunk: str
     matched_chunk: str
+
+
+class TagStats(BaseModel):
+    id: int
+    name: str
+    count: int

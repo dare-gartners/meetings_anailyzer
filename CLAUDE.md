@@ -133,7 +133,8 @@ Add a login page (e.g. `pages/login.html`) served at `/login`. It should show a 
 - DB save failures are logged but never surface to the caller — `/analyze` always returns the LLM result
 
 ## Meeting History & Detail View
-- `GET /meetings` — returns all meetings ordered by `created_at` desc (`id`, `title`, `created_at`)
+- `GET /meetings` — returns all meetings ordered by `created_at` desc (`id`, `title`, `created_at`); optional `?tag=<name>` query param filters to meetings linked to that tag
+- `GET /tags/trending` — returns all tags sorted by meeting count desc; each item: `id`, `name`, `count`
 - `GET /meetings/{id}` — returns full meeting detail (`id`, `title`, `created_at`, `summary`, `tags`, `date`, `recording_url`, `notes_raw`)
 - `POST /meetings/{id}/tags` — adds a tag to a meeting (body: `{name}`); max 10 tags per meeting; validates format; reuses existing global tag if name matches
 - `DELETE /meetings/{id}/tags/{tag_name}` — unlinks a tag from a meeting; does NOT delete the tag globally
@@ -155,6 +156,14 @@ Add a login page (e.g. `pages/login.html`) served at `/login`. It should show a 
 - Best match row has a green border; column widths: 42% / 42% / 7% / 9%
 - "Why?" button calls `POST /matches/explain`, shows explanation in a yellow/amber row below; clicking again hides it
 - Results panel resets when switching to a different meeting
+
+## Tag Analytics View
+- Sidebar has two sections: "Meetings" (top, with meeting list) and "Analytics" (bottom, section header only); under Analytics is a "Trending Topics" item that opens the tag analytics view
+- Shows all tags as color-coded badges (same `tagPalette` logic) with meeting count next to each name
+- Clicking a tag sets `activeTagFilter` and re-loads the sidebar to show only meetings with that tag; clicking the same tag again clears the filter
+- Active tag has an outline highlight (`.tag-active`)
+- `activeTagFilter` persists across view changes until cleared by clicking the tag again or opening the Tags view
+- Navigating to New Meeting (`showAnalyzeView`) clears the Tags button active state; the filter itself is cleared
 
 ## Similarity Search
 - `POST /meetings/{id}/similar` — finds meetings similar to the given one using chunk embeddings
