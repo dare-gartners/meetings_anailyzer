@@ -64,3 +64,16 @@ class TagStats(BaseModel):
     id: int
     name: str
     count: int
+
+
+class SearchRequest(BaseModel):
+    query: str
+
+
+class SearchResult(BaseModel):
+    id: int
+    title: str
+    created_at: datetime
+    matched_chunk: str
+    matched_description: Optional[str] = None
+    score: float
