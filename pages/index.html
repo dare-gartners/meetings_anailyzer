@@ -34,7 +34,8 @@
       flex-shrink: 0;
     }
 
-    .app-header h1 { margin: 0 0 0.5rem 0; font-size: 2.5rem; font-weight: 700; }
+    .app-header h1 { margin: 0 0 0.5rem 0; font-size: 2.5rem; font-weight: 700; cursor: pointer; }
+    .app-header h1:hover { opacity: 0.85; }
     .app-subtitle { margin: 0; font-size: 1.125rem; opacity: 0.95; }
 
     .header-inner {
@@ -522,6 +523,44 @@
       padding: 0.6rem 0.75rem; font-size: 0.85rem; color: #495057; line-height: 1.5;
     }
 
+    /* Search */
+    .search-bar { display: flex; gap: 0.5rem; align-items: center; }
+    .search-bar input {
+      flex: 1; padding: 0.6rem 1rem;
+      border: 1px solid #dee2e6; border-radius: 8px;
+      font-size: 1rem; font-family: inherit; color: #212529;
+      transition: border-color 0.2s;
+    }
+    .search-bar input:focus {
+      outline: none; border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
+    }
+    .search-submit-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white; border: none; border-radius: 8px;
+      padding: 0.6rem 1.25rem; font-size: 1rem; font-family: inherit;
+      cursor: pointer; white-space: nowrap;
+    }
+    .search-submit-btn:hover:not(:disabled) { opacity: 0.9; }
+    .search-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .search-empty { font-size: 0.875rem; color: #6c757d; margin-top: 0.5rem; }
+
+    /* Home view */
+    .home-search-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 5rem 2rem 2rem;
+    }
+    .home-search-wrap .search-bar {
+      width: 100%;
+      max-width: 580px;
+    }
+    .home-search-wrap .search-bar input {
+      font-size: 1.05rem;
+      padding: 0.75rem 1.1rem;
+    }
+
     /* Footer */
     .app-footer {
       text-align: center; padding: 1.25rem;
@@ -583,6 +622,8 @@
       .sim-table td { border-color: #3a3a3a; }
       .sim-table .col-your { background: #1a2a44; }
       .explain-row td { background: #2a2200; border-left-color: #ffc107; color: #ccc; }
+      .search-bar input { background: #333; border-color: #555; color: #f0f0f0; }
+      .search-empty { color: #aaa; }
     }
   </style>
 </head>
@@ -590,7 +631,7 @@
 
   <header class="app-header">
     <div class="header-inner">
-      <h1>📚 Meeting L-AI-brary</h1>
+      <h1 id="app-title">📚 Meeting L-AI-brary</h1>
       <p class="app-subtitle">AI-powered meeting library with smart tagging and semantic search</p>
       <div class="header-user">
         <span>{{ email }}</span>
@@ -620,6 +661,29 @@
     <!-- Main -->
     <main class="app-main">
     <div class="main-content">
+
+      <!-- Home view -->
+      <div id="view-home" style="display:none;">
+        <div class="home-search-wrap">
+          <div class="search-bar">
+            <input type="text" id="home-search-input" placeholder="Search meetings…" autocomplete="off" />
+            <button class="search-submit-btn" id="home-search-btn" type="button">Search</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search bar (hidden in form view) -->
+      <div id="search-container" style="display:none; margin-bottom:1.25rem;">
+        <div class="search-bar">
+          <input type="text" id="search-input" placeholder="Search meetings…" autocomplete="off" />
+          <button class="search-submit-btn" id="search-submit-btn" type="button">Search</button>
+        </div>
+      </div>
+
+      <!-- Search results view -->
+      <div id="view-search" style="display:none;">
+        <div id="search-results" style="display:flex; flex-direction:column; gap:0.75rem;"></div>
+      </div>
 
       <!-- Analyze view -->
       <div id="view-analyze">
@@ -732,6 +796,7 @@
     // ── State ────────────────────────────────────────────────────────────────
     let currentMeetingId = null;
     let activeTagFilter = null;
+    let beforeSearchRestore = null;
 
     // ── DOM refs ─────────────────────────────────────────────────────────────
     const viewAnalyze = document.getElementById('view-analyze');
@@ -772,8 +837,25 @@
     }
 
     // ── Views ────────────────────────────────────────────────────────────────
+    function showHomeView() {
+      currentMeetingId = null;
+      beforeSearchRestore = null;
+      viewAnalyze.style.display = 'none';
+      viewDetail.style.display  = 'none';
+      document.getElementById('view-tags').style.display   = 'none';
+      document.getElementById('view-search').style.display = 'none';
+      document.getElementById('view-home').style.display   = '';
+      document.getElementById('search-container').style.display = 'none';
+      document.getElementById('search-input').value = '';
+      document.getElementById('home-search-input').value = '';
+      document.getElementById('tags-nav-btn').classList.remove('active');
+      setSidebarActive(null);
+      document.getElementById('home-search-input').focus();
+    }
+
     function showAnalyzeView() {
       currentMeetingId = null;
+      beforeSearchRestore = null;
       document.getElementById('title').value = '';
       document.getElementById('notes').value = '';
       document.getElementById('date').value = '';
@@ -782,11 +864,19 @@
       viewAnalyze.style.display = '';
       viewDetail.style.display  = 'none';
       document.getElementById('view-tags').style.display = 'none';
+      document.getElementById('view-search').style.display = 'none';
+      document.getElementById('search-container').style.display = 'none';
+      document.getElementById('search-input').value = '';
       document.getElementById('tags-nav-btn').classList.remove('active');
       setSidebarActive(null);
     }
 
     async function showTagsView() {
+      beforeSearchRestore = null;
+      document.getElementById('search-input').value = '';
+      document.getElementById('view-search').style.display = 'none';
+      document.getElementById('view-home').style.display = 'none';
+      document.getElementById('search-container').style.display = '';
       viewAnalyze.style.display = 'none';
       viewDetail.style.display  = 'none';
       document.getElementById('view-tags').style.display = '';
@@ -826,10 +916,15 @@
       if (!res.ok) return;
       const m = await res.json();
       currentMeetingId = id;
+      beforeSearchRestore = null;
+      document.getElementById('search-input').value = '';
       renderDetail(m);
       viewAnalyze.style.display = 'none';
       viewDetail.style.display  = '';
       document.getElementById('view-tags').style.display = 'none';
+      document.getElementById('view-search').style.display = 'none';
+      document.getElementById('view-home').style.display = 'none';
+      document.getElementById('search-container').style.display = '';
       setSidebarActive(id);
       if (successMessage) {
         const banner = document.getElementById('success-banner');
@@ -1127,6 +1222,124 @@
         <tbody>${rows}${moreRow}</tbody>
       </table>`;
     }
+
+    // ── Search ───────────────────────────────────────────────────────────────
+    const searchInput = document.getElementById('search-input');
+    const searchSubmitBtn = document.getElementById('search-submit-btn');
+
+    function _captureRestore() {
+      if (beforeSearchRestore) return;
+      const wasDetail = viewDetail.style.display !== 'none';
+      const wasTags   = document.getElementById('view-tags').style.display !== 'none';
+      const wasHome   = document.getElementById('view-home').style.display !== 'none';
+      const savedId   = currentMeetingId;
+      beforeSearchRestore = () => {
+        document.getElementById('view-search').style.display = 'none';
+        if (wasDetail) {
+          viewDetail.style.display = '';
+          setSidebarActive(savedId);
+        } else if (wasTags) {
+          document.getElementById('view-tags').style.display = '';
+          document.getElementById('tags-nav-btn').classList.add('active');
+        } else if (wasHome) {
+          document.getElementById('view-home').style.display = '';
+        }
+      };
+    }
+
+    async function runSearch(query) {
+      _captureRestore();
+      viewAnalyze.style.display = 'none';
+      viewDetail.style.display  = 'none';
+      document.getElementById('view-tags').style.display = 'none';
+      document.getElementById('view-home').style.display = 'none';
+      setSidebarActive(null);
+      document.getElementById('tags-nav-btn').classList.remove('active');
+      document.getElementById('search-container').style.display = '';
+      searchInput.value = query;
+      const searchView = document.getElementById('view-search');
+      searchView.style.display = '';
+      const resultsContainer = document.getElementById('search-results');
+      resultsContainer.innerHTML = '<div class="search-empty">Searching…</div>';
+      searchSubmitBtn.disabled = true;
+
+      try {
+        const res = await fetch('/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query }),
+        });
+        if (!res.ok) throw new Error('Search failed');
+        const results = await res.json();
+        resultsContainer.innerHTML = '';
+        if (!results.length) {
+          resultsContainer.innerHTML = '<div class="search-empty">No meetings found for this query.</div>';
+        } else {
+          results.forEach(r => buildSearchCard(r, resultsContainer));
+        }
+      } catch {
+        resultsContainer.innerHTML = '<div class="search-empty">Search failed. Please try again.</div>';
+      } finally {
+        searchSubmitBtn.disabled = false;
+      }
+    }
+
+    function buildSearchCard(r, container) {
+      const date = new Date(r.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+      const pct = Math.round(r.score * 100);
+      const label = r.matched_description || firstLine(r.matched_chunk);
+
+      const card = document.createElement('div');
+      card.className = 'sim-card';
+      card.style.cursor = 'pointer';
+      card.innerHTML = `
+        <div class="sim-card-header">
+          <div class="sim-card-header-left">
+            <div class="sim-card-header-title">${esc(r.title)}</div>
+            <div class="sim-card-header-date">${date}</div>
+          </div>
+          <div class="sim-card-header-right">
+          </div>
+        </div>
+        <div class="sim-card-body">
+          <div class="sim-chunk">${esc(label)}</div>
+        </div>`;
+      card.addEventListener('click', () => openMeeting(r.id));
+      container.appendChild(card);
+    }
+
+    document.getElementById('app-title').addEventListener('click', showHomeView);
+
+    const homeSearchInput = document.getElementById('home-search-input');
+    document.getElementById('home-search-btn').addEventListener('click', () => {
+      const q = homeSearchInput.value.trim();
+      if (q) runSearch(q);
+    });
+    homeSearchInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const q = homeSearchInput.value.trim();
+        if (q) runSearch(q);
+      }
+    });
+
+    searchSubmitBtn.addEventListener('click', () => {
+      const q = searchInput.value.trim();
+      if (q) runSearch(q);
+    });
+
+    searchInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const q = searchInput.value.trim();
+        if (q) runSearch(q);
+      }
+    });
+
+    searchInput.addEventListener('input', () => {
+      if (!searchInput.value.trim() && beforeSearchRestore) {
+        beforeSearchRestore();
+        beforeSearchRestore = null;
+      }
+    });
 
     // ── Helpers ──────────────────────────────────────────────────────────────
     function esc(s) {

@@ -33,8 +33,9 @@ def analyze_notes(notes: str, title: str = "") -> str:
 def generate_description(chunk: str) -> str:
     t0 = time.perf_counter()
     prompt = (
-        "In up to 3 sentences, describe the specific problem or decision addressed in this topic. "
-        "Focus on what is being solved or decided, not the product area or domain it belongs to. "
+        "In up to 3 sentences, summarize what this meeting topic is about. "
+        "Describe only what is actually present in the text — do not invent problems, decisions, or context that are not stated. "
+        "Be concise: use fewer sentences if the content is simple or brief. Never produce a description longer than the original text. "
         "Do not start with 'This meeting', 'This topic', 'The team', or any similar preamble — "
         "start directly with the subject matter. Avoid product names unless essential to the meaning.\n\n"
         f"{chunk}"
@@ -45,7 +46,8 @@ def generate_description(chunk: str) -> str:
         max_tokens=192,
     )
     logger.info("llm:generate_description done %.0fms", (time.perf_counter() - t0) * 1000)
-    return response.choices[0].message.content.strip()
+    result = response.choices[0].message.content.strip()
+    return result if len(result) < len(chunk) else chunk
 
 
 def verify_match(desc_a: str, desc_b: str) -> bool:

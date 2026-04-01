@@ -177,6 +177,22 @@ Add a login page (e.g. `pages/login.html`) served at `/login`. It should show a 
 - Cosine similarity: `dot(a,b) / (norm(a) * norm(b))` in numpy
 - `verify_match` failures are logged and the match is kept (fail open — prefer showing a false positive over hiding a true one)
 
+## Free-text Search
+- `POST /search` — hybrid search combining chunk embeddings and tag matching
+- Request body: `SearchRequest(query: str)`
+- Logic (two signals merged):
+  1. **Tag match**: query is tokenized, stop words filtered out via `_STOP_WORDS` (module-level set in `app.py`), remaining words embedded individually; all tag names are also embedded; both batches run in one `asyncio.gather` call; a tag matches if any query word has cosine similarity ≥ 0.75 against the tag embedding (word-to-word avoids phrase-dilution); meetings with matching tags included regardless of chunk score
+  2. **Embedding match**: query is embedded and compared via `_cosine()` against all chunk embeddings; meetings with best chunk score ≥ 0.45 are included
+  - For tag-matched meetings that also have embeddings, their actual best embedding score is used (so they rank naturally among other results)
+  - For tag-matched meetings with no embeddings at all, `matched_chunk` falls back to the meeting summary and score is 0.0 (sorts last)
+  - The 0.45 threshold still applies to non-tag-matched meetings to suppress noise
+- Response: list of `SearchResult(id, title, created_at, matched_chunk, matched_description, score)`
+- `matched_description` is nullable (null for old chunks without a description)
+- Frontend: search bar shown in detail and tags views, hidden in the new-meeting form view; home view has its own centered search bar that feeds into the same `runSearch` flow
+- Search bar state: `beforeSearchRestore` captures the previous view as a closure; clearing the input calls it to restore the previous view; navigating to any view directly (openMeeting, showTagsView, showAnalyzeView) resets `beforeSearchRestore = null` and clears the search input
+- Results rendered as `.sim-card` style cards (title, date, matched topic snippet); clicking a card opens the meeting
+- No results message shown when list is empty; error message on fetch failure
+
 ## Match Explanation
 - `POST /matches/explain` — generates a 1-2 sentence explanation of why two chunks are semantically related
 - Request body: `source_chunk`, `matched_chunk` (frontend sends descriptions when available, falls back to raw chunk text)
