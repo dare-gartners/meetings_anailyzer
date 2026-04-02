@@ -39,6 +39,27 @@ Do not overengineer it.
 - Do not add auth unless requested (Okta auth has been requested — see Authentication section)
 - Do not add agents, RAG, queues, or Docker unless requested
 
+### Where to put new code
+Every new feature must go into the file that owns that concern. Do not add routes or logic to `app.py`.
+
+| What you're adding | Where it goes |
+|--------------------|---------------|
+| New API endpoint related to meetings (CRUD, tags, analytics) | `routers/meetings.py` |
+| New API endpoint for analysis or ingestion | `routers/analyze.py` |
+| New API endpoint for similarity or explanation | `routers/similarity.py` |
+| New API endpoint for search | `routers/search.py` |
+| Shared helper used by 2+ routers (e.g. a new utility function) | `routers/common.py` |
+| New LLM call (chat completion or embedding) | `llm_client.py` |
+| New prompt template or prompt-building logic | `ai_templates.py` |
+| New Pydantic request/response model | `models.py` |
+| New DB table, column, or migration | `database.py` |
+| New auth route or Okta logic | `auth.py` |
+| New CSS styles | `pages/static/style.css` |
+| New JavaScript behaviour | `pages/static/app.js` |
+| New HTML page | `pages/<name>.html` |
+
+If a new feature doesn't fit any existing file cleanly, create a new dedicated file rather than cramming it into the nearest one. Add it to the **File Responsibilities** section in this file.
+
 ## Authentication
 
 Authentication is via **Adobe Okta** using the Authorization Code flow with PKCE. No client secret is needed (SPA/public-client app type).
@@ -105,17 +126,34 @@ All Okta logic lives in `auth.py` (not `app.py`). Import it in `app.py` and call
 Add a login page (e.g. `pages/login.html`) served at `/login`. It should show a single "Sign in with Adobe (Okta)" button that links to `/auth/okta/login`. Style it consistently with `index.html`.
 
 ## File Responsibilities
-- `app.py` contains the FastAPI app and routes
-- `llm_client.py` handles model API calls
-- `ai_templates.py` stores prompt-building logic
-- `models.py` stores request/response schemas
-- `database.py` contains SQLAlchemy models (`Meeting`, `Chunk`, `Tag`, `MeetingTag`) and `init_db()` (also runs ALTER TABLE migrations for new columns)
-- `.env.example` documents all required environment variables with placeholder values
-- `chunking.py` contains `chunk_text(notes) -> list[str]` — topic-based chunking for Teams AI format
-- `pages/index.html` contains the UI — inline CSS and JS, no build step required. Layout: fixed sidebar (260px) listing saved meetings + main area showing either the new-meeting form or a meeting detail view. Style: purple gradient header (`#667eea` → `#764ba2`), white cards with `border-radius: 8px` and `box-shadow`, Inter font via Google Fonts, dark mode via `prefers-color-scheme`. The new-meeting form has fields: title (required), notes (required), date, recording URL, plus Save and Cancel buttons. App title is "Meeting L-AI-brary". Sidebar heading is "Meetings".
-- `auth.py` handles Okta authentication — PKCE flow, JWT validation, signed session cookies
-- `pages/login.html` contains the login page with a single "Sign in with Adobe (Okta)" button
-- `tests/` contains basic tests
+
+### Backend
+- `app.py` — FastAPI app setup, auth routes (`/auth/okta/*`, `/auth/logout`, `/auth/status`), page routes (`/`, `/login`), and router registration. No business logic.
+- `routers/analyze.py` — `POST /analyze`: LLM call, DB save, parallel description/embedding/tag generation
+- `routers/meetings.py` — meeting CRUD (`GET/DELETE /meetings/{id}`), tag management (`POST/DELETE /meetings/{id}/tags`), list (`GET /meetings`), analytics (`GET /tags/trending`)
+- `routers/similarity.py` — `POST /meetings/{id}/similar` and `POST /matches/explain`
+- `routers/search.py` — `POST /search`: hybrid chunk-embedding + tag-semantic search
+- `routers/common.py` — shared utilities: `_cosine`, `_meeting_tags`, `_STOP_WORDS`, `TAG_PATTERN`
+- `llm_client.py` — Azure OpenAI API calls: `analyze_notes`, `generate_description`, `generate_embedding`, `generate_tags`, `verify_match`, `explain_match`
+- `ai_templates.py` — prompt-building logic
+- `models.py` — Pydantic request/response schemas
+- `database.py` — SQLAlchemy models (`Meeting`, `Chunk`, `Tag`, `MeetingTag`), `init_db()`, and `PRAGMA foreign_keys=ON` event listener
+- `chunking.py` — `chunk_text(notes) -> list[str]`, topic-based chunking for Teams AI format
+- `auth.py` — Okta PKCE flow, JWT validation, signed session cookies
+- `.env.example` — all required environment variables with placeholder values
+
+### Frontend
+- `pages/index.html` — thin Jinja2 template; links to `/static/style.css` and `/static/app.js`; only contains HTML structure and the `{{ email }}` template variable
+- `pages/static/style.css` — all CSS: layout, sidebar, cards, tags, similarity table, search, dark mode
+- `pages/static/app.js` — all JavaScript: sidebar, views (home/analyze/detail/tags/search), tag management, similarity cards, search
+- `pages/login.html` — login page with "Sign in with Adobe (Okta)" button
+- Static files are served via `app.mount("/static", StaticFiles(directory="pages/static"))` — requires `aiofiles` package
+
+### Tests
+- `tests/conftest.py` — session-scoped in-memory SQLite (StaticPool + `PRAGMA foreign_keys=ON`), per-test `clean_db`, auth-bypassed `client` fixture
+- `tests/test_api_analyze.py` — patches via `patch.multiple("routers.analyze", ...)`
+- `tests/test_api_similarity.py` — patches via `patch("routers.similarity.verify_match", ...)` etc.
+- `tests/test_search_tags.py` — imports `_STOP_WORDS`, `_cosine` from `routers.common`; patches via `patch("routers.search.generate_embedding", ...)`
 
 ## Persistence
 - SQLite via SQLAlchemy, stored in `meetings.db`

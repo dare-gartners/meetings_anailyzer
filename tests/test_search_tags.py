@@ -18,7 +18,8 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 
 import database
-from app import _STOP_WORDS, _cosine, app
+from routers.common import _STOP_WORDS, _cosine
+from app import app
 from database import Meeting, Tag, MeetingTag
 
 
@@ -141,20 +142,6 @@ def _make_embedding_map(**kwargs) -> dict[str, bytes]:
     return kwargs
 
 
-@pytest.fixture(autouse=True)
-def clean_db():
-    """Wipe test data before each test. Deletes in FK order to avoid cascade issues."""
-    db = database.SessionLocal()
-    try:
-        db.query(MeetingTag).delete()
-        db.query(database.Chunk).delete()
-        db.query(Tag).delete()
-        db.query(Meeting).delete()
-        db.commit()
-    finally:
-        db.close()
-    yield
-
 
 def _seed_meeting(title: str, tag_name: str, chunk_emb: bytes) -> int:
     """Insert a meeting + tag + chunk with embedding. Returns meeting id."""
@@ -193,7 +180,7 @@ class TestSearchTagMatching:
             # default: noise vector (won't match any tag)
             return _NOISE_VEC
 
-        with patch("app.generate_embedding", side_effect=fake_embedding), \
+        with patch("routers.search.generate_embedding", side_effect=fake_embedding), \
              patch("auth.require_auth", return_value="test@example.com"):
             client = TestClient(app)
             res = client.post("/search", json={"query": query})

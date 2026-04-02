@@ -1,10 +1,15 @@
-from sqlalchemy import create_engine, Column, Integer, String, Text, ForeignKey, UniqueConstraint, DateTime, LargeBinary
+from sqlalchemy import create_engine, Column, Integer, String, Text, ForeignKey, UniqueConstraint, DateTime, LargeBinary, event
 from sqlalchemy.orm import declarative_base, sessionmaker
 from datetime import datetime, timezone
 
 DATABASE_URL = "sqlite:///./meetings.db"
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+
+
+@event.listens_for(engine, "connect")
+def _set_sqlite_pragma(dbapi_conn, _):
+    dbapi_conn.execute("PRAGMA foreign_keys=ON")
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
 
