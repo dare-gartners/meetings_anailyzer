@@ -9,6 +9,6 @@ def test_index():
     assert res.status_code == 200
 
 
-def test_analyze_returns_error_without_llm():
+def test_analyze_requires_title():
     res = client.post("/analyze", json={"notes": "Test meeting"})
-    assert res.status_code == 500
+    assert res.status_code == 422

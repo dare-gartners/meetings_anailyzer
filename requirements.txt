@@ -4,6 +4,7 @@ uvicorn
 
 # UI
 jinja2
+aiofiles
 
 # data models
 pydantic
