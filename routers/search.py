@@ -9,10 +9,10 @@ import numpy as np
 from fastapi import APIRouter, Request, HTTPException
 
 import auth
-import database
-from database import Chunk, Tag, MeetingTag, Meeting
-from llm_client import generate_embedding
-from models import SearchRequest, SearchResult
+import core.database as database
+from core.database import Chunk, Tag, MeetingTag, Meeting
+from llm.client import generate_embedding
+from core.models import SearchRequest, SearchResult
 from routers.common import _cosine, _STOP_WORDS
 
 logger = logging.getLogger(__name__)

@@ -5,9 +5,9 @@ from fastapi import APIRouter, HTTPException, Request
 from sqlalchemy import func
 
 import auth
-import database
-from database import Meeting, Tag, MeetingTag
-from models import MeetingListItem, MeetingDetail, TagAddRequest, TagStats
+import core.database as database
+from core.database import Meeting, Tag, MeetingTag
+from core.models import MeetingListItem, MeetingDetail, TagAddRequest, TagStats
 from routers.common import _meeting_tags, TAG_PATTERN
 
 logger = logging.getLogger(__name__)

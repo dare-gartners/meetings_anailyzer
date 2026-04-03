@@ -49,11 +49,11 @@ Every new feature must go into the file that owns that concern. Do not add route
 | New API endpoint for similarity or explanation | `routers/similarity.py` |
 | New API endpoint for search | `routers/search.py` |
 | Shared helper used by 2+ routers (e.g. a new utility function) | `routers/common.py` |
-| New LLM call (chat completion or embedding) | `llm_client.py` |
-| New prompt template or prompt-building logic | `ai_templates.py` |
-| New Pydantic request/response model | `models.py` |
-| New DB table, column, or migration | `database.py` |
-| New auth route or Okta logic | `auth.py` |
+| New LLM call (chat completion or embedding) | `llm/client.py` |
+| New prompt template or prompt-building logic | `llm/templates.py` |
+| New Pydantic request/response model | `core/models.py` |
+| New DB table, column, or migration | `core/database.py` |
+| New auth route or Okta logic | `auth/okta.py` |
 | New CSS styles | `pages/static/style.css` |
 | New JavaScript behaviour | `pages/static/app.js` |
 | New HTML page | `pages/<name>.html` |
@@ -120,7 +120,7 @@ itsdangerous>=2.1.0
 - `GET /auth/status` — returns `{"authenticated": bool}` for the frontend to check
 
 ### Auth file
-All Okta logic lives in `auth.py` (not `app.py`). Import it in `app.py` and call its functions from routes. `load_dotenv()` must be called **before** importing `auth.py`, because env vars are read at module load time.
+All Okta logic lives in `auth/okta.py`. `auth/__init__.py` re-exports all public functions so the rest of the codebase can use `import auth` unchanged. `load_dotenv()` must be called **before** importing `auth`, because env vars are read at module load time.
 
 ### Login UI
 Add a login page (e.g. `pages/login.html`) served at `/login`. It should show a single "Sign in with Adobe (Okta)" button that links to `/auth/okta/login`. Style it consistently with `index.html`.
@@ -134,12 +134,12 @@ Add a login page (e.g. `pages/login.html`) served at `/login`. It should show a 
 - `routers/similarity.py` — `POST /meetings/{id}/similar` and `POST /matches/explain`
 - `routers/search.py` — `POST /search`: hybrid chunk-embedding + tag-semantic search
 - `routers/common.py` — shared utilities: `_cosine`, `_meeting_tags`, `_STOP_WORDS`, `TAG_PATTERN`
-- `llm_client.py` — Azure OpenAI API calls: `analyze_notes`, `generate_description`, `generate_embedding`, `generate_tags`, `verify_match`, `explain_match`
-- `ai_templates.py` — prompt-building logic
-- `models.py` — Pydantic request/response schemas
-- `database.py` — SQLAlchemy models (`Meeting`, `Chunk`, `Tag`, `MeetingTag`), `init_db()`, and `PRAGMA foreign_keys=ON` event listener
-- `chunking.py` — `chunk_text(notes) -> list[str]`, topic-based chunking for Teams AI format
-- `auth.py` — Okta PKCE flow, JWT validation, signed session cookies
+- `llm/client.py` — Azure OpenAI API calls: `analyze_notes`, `generate_description`, `generate_embedding`, `generate_tags`, `verify_match`, `explain_match`
+- `llm/templates.py` — prompt-building logic
+- `core/models.py` — Pydantic request/response schemas
+- `core/database.py` — SQLAlchemy models (`Meeting`, `Chunk`, `Tag`, `MeetingTag`), `init_db()`, and `PRAGMA foreign_keys=ON` event listener
+- `core/chunking.py` — `chunk_text(notes) -> list[str]`, topic-based chunking for Teams AI format
+- `auth/okta.py` — Okta PKCE flow, JWT validation, signed session cookies; `auth/__init__.py` re-exports all public functions so `import auth` works throughout
 - `.env.example` — all required environment variables with placeholder values
 
 ### Frontend

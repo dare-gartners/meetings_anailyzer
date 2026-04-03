@@ -10,7 +10,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from database import init_db
+from core.database import init_db
 from routers import analyze, meetings, similarity, search
 
 logging.basicConfig(

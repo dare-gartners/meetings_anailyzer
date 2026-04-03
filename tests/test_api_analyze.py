@@ -4,8 +4,8 @@ import numpy as np
 import pytest
 from unittest.mock import patch, MagicMock
 from fastapi.testclient import TestClient
-import database
-from database import Meeting
+import core.database as database
+from core.database import Meeting
 
 
 VALID_JSON = json.dumps({"summary": "Q2 planning discussed.", "tags": ["roadmap", "budget"]})

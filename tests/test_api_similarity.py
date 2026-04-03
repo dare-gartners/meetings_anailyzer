@@ -3,8 +3,8 @@ import numpy as np
 import pytest
 from unittest.mock import patch, MagicMock
 from fastapi.testclient import TestClient
-import database
-from database import Meeting, Chunk, Tag, MeetingTag
+import core.database as database
+from core.database import Meeting, Chunk, Tag, MeetingTag
 
 
 def _ebytes(dim: int = 0, size: int = 1536) -> bytes:

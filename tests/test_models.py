@@ -1,7 +1,7 @@
 """Tests for Pydantic models in models.py — no DB or LLM needed."""
 import pytest
 from pydantic import ValidationError
-from models import (
+from core.models import (
     NotesRequest, NotesResponse, TagAddRequest,
     SearchRequest, SearchResult, ChunkMatch, SimilarMeeting,
 )

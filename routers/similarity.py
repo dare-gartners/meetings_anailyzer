@@ -8,10 +8,10 @@ import numpy as np
 from fastapi import APIRouter, HTTPException, Request
 
 import auth
-import database
-from database import Meeting, Chunk
-from llm_client import explain_match, verify_match
-from models import SimilarMeeting, ChunkMatch, ExplainRequest
+import core.database as database
+from core.database import Meeting, Chunk
+from llm.client import explain_match, verify_match
+from core.models import SimilarMeeting, ChunkMatch, ExplainRequest
 from routers.common import _cosine, _meeting_tags
 
 logger = logging.getLogger(__name__)
