@@ -2,8 +2,8 @@
 import pytest
 import numpy as np
 from sqlalchemy.exc import IntegrityError
-import database
-from database import Meeting, Chunk, Tag, MeetingTag
+import core.database as database
+from core.database import Meeting, Chunk, Tag, MeetingTag
 
 
 def _meeting(**kwargs) -> Meeting:

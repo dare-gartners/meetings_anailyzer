@@ -2,8 +2,8 @@
 import pytest
 from unittest.mock import patch
 from fastapi.testclient import TestClient
-import database
-from database import Meeting, Tag, MeetingTag
+import core.database as database
+from core.database import Meeting, Tag, MeetingTag
 
 
 def _seed(title="Test Meeting", tags=None, recording_url=None, meeting_date=None):

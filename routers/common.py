@@ -2,7 +2,7 @@
 
 import re
 import numpy as np
-from database import Tag, MeetingTag
+from core.database import Tag, MeetingTag
 
 
 TAG_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*$")

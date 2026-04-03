@@ -17,10 +17,10 @@ import pytest
 from unittest.mock import patch
 from fastapi.testclient import TestClient
 
-import database
+import core.database as database
 from routers.common import _STOP_WORDS, _cosine
 from app import app
-from database import Meeting, Tag, MeetingTag
+from core.database import Meeting, Tag, MeetingTag
 
 
 # ── Helper: replicate the stop-word filtering from /search ───────────────────

@@ -8,11 +8,11 @@ import time
 from fastapi import APIRouter, HTTPException, Request
 
 import auth
-import database
-from database import Meeting, Chunk, Tag, MeetingTag
-from llm_client import analyze_notes, generate_tags, generate_description, generate_embedding
-from models import NotesRequest, NotesResponse
-from chunking import chunk_text
+import core.database as database
+from core.database import Meeting, Chunk, Tag, MeetingTag
+from llm.client import analyze_notes, generate_tags, generate_description, generate_embedding
+from core.models import NotesRequest, NotesResponse
+from core.chunking import chunk_text
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

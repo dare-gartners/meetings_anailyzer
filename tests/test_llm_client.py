@@ -28,8 +28,8 @@ def _mock_client(chat_content: str = None, emb_vec: list = None):
 
 class TestGenerateTags:
     def _call(self, llm_response: str, existing: list = None) -> list:
-        from llm_client import generate_tags
-        with patch("llm_client._client", return_value=_mock_client(chat_content=llm_response)):
+        from llm.client import generate_tags
+        with patch("llm.client._client", return_value=_mock_client(chat_content=llm_response)):
             return generate_tags("some chunk text", existing or [])
 
     def test_returns_valid_tags(self):
@@ -67,8 +67,8 @@ class TestGenerateTags:
         assert self._call('["budget"]', existing=[]) == ["budget"]
 
     def test_malformed_json_raises(self):
-        from llm_client import generate_tags
-        with patch("llm_client._client", return_value=_mock_client(chat_content="not json")):
+        from llm.client import generate_tags
+        with patch("llm.client._client", return_value=_mock_client(chat_content="not json")):
             with pytest.raises(Exception):
                 generate_tags("chunk", [])
 
@@ -79,8 +79,8 @@ class TestGenerateTags:
 
 class TestVerifyMatch:
     def _call(self, response: str) -> bool:
-        from llm_client import verify_match
-        with patch("llm_client._client", return_value=_mock_client(chat_content=response)):
+        from llm.client import verify_match
+        with patch("llm.client._client", return_value=_mock_client(chat_content=response)):
             return verify_match("desc a", "desc b")
 
     def test_yes_returns_true(self):
@@ -104,8 +104,8 @@ class TestVerifyMatch:
 
 class TestGenerateDescription:
     def _call(self, response: str, chunk: str = "x" * 100) -> str:
-        from llm_client import generate_description
-        with patch("llm_client._client", return_value=_mock_client(chat_content=response)):
+        from llm.client import generate_description
+        with patch("llm.client._client", return_value=_mock_client(chat_content=response)):
             return generate_description(chunk)
 
     def test_returns_description_when_shorter_than_chunk(self):
@@ -129,38 +129,38 @@ class TestGenerateDescription:
 
 class TestGenerateEmbedding:
     def test_returns_bytes(self):
-        from llm_client import generate_embedding
+        from llm.client import generate_embedding
         vec = [0.1, 0.2, 0.3, 0.4]
-        with patch("llm_client._client", return_value=_mock_client(emb_vec=vec)):
+        with patch("llm.client._client", return_value=_mock_client(emb_vec=vec)):
             result = generate_embedding("hello")
         assert isinstance(result, bytes)
 
     def test_bytes_deserialize_to_float32(self):
-        from llm_client import generate_embedding
+        from llm.client import generate_embedding
         vec = [0.1, 0.2, 0.3]
-        with patch("llm_client._client", return_value=_mock_client(emb_vec=vec)):
+        with patch("llm.client._client", return_value=_mock_client(emb_vec=vec)):
             result = generate_embedding("hello")
         recovered = np.frombuffer(result, dtype=np.float32)
         np.testing.assert_allclose(recovered, vec, rtol=1e-5)
 
     def test_vector_length_preserved(self):
-        from llm_client import generate_embedding
+        from llm.client import generate_embedding
         vec = list(range(1536))
-        with patch("llm_client._client", return_value=_mock_client(emb_vec=vec)):
+        with patch("llm.client._client", return_value=_mock_client(emb_vec=vec)):
             result = generate_embedding("hello")
         assert len(np.frombuffer(result, dtype=np.float32)) == 1536
 
 
 class TestExplainMatch:
     def test_returns_explanation_string(self):
-        from llm_client import explain_match
+        from llm.client import explain_match
         explanation = "Both meetings discussed budget planning."
-        with patch("llm_client._client", return_value=_mock_client(chat_content=explanation)):
+        with patch("llm.client._client", return_value=_mock_client(chat_content=explanation)):
             result = explain_match("topic a", "topic b")
         assert result == explanation
 
     def test_strips_whitespace(self):
-        from llm_client import explain_match
-        with patch("llm_client._client", return_value=_mock_client(chat_content="  Both meetings discussed X.  ")):
+        from llm.client import explain_match
+        with patch("llm.client._client", return_value=_mock_client(chat_content="  Both meetings discussed X.  ")):
             result = explain_match("a", "b")
         assert result == "Both meetings discussed X."

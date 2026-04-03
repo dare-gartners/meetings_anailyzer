@@ -16,7 +16,7 @@ from fastapi.testclient import TestClient
 
 @pytest.fixture(scope="session", autouse=True)
 def _use_test_db():
-    import database
+    import core.database as database
 
     # StaticPool forces all connections to share one in-memory DB so that
     # tables created by init_db() are visible to every subsequent session.
@@ -50,7 +50,7 @@ def _use_test_db():
 @pytest.fixture(autouse=True)
 def clean_db():
     """Wipe all rows before each test. Deletes in FK order."""
-    import database
+    import core.database as database
     db = database.SessionLocal()
     try:
         db.query(database.MeetingTag).delete()

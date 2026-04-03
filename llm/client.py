@@ -5,7 +5,7 @@ import time
 import logging
 import numpy as np
 from openai import AzureOpenAI
-from ai_templates import build_prompt
+from llm.templates import build_prompt
 
 TAG_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 logger = logging.getLogger(__name__)

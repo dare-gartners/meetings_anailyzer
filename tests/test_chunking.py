@@ -1,5 +1,5 @@
 """Tests for chunking.py — pure functions, no DB or LLM needed."""
-from chunking import chunk_text
+from core.chunking import chunk_text
 
 
 class TestTopicHeaderDetection:
